@@ -1,5 +1,28 @@
 <center>
-    <h1>FlashCards Configuration Tool</h1>
+    <h1>{{pageTitle}}</h1>
+
+        <h2 style="font-size: 20px;">Staged New Questions:</h2>
+        <div data-ng-repeat="newQuestion in newQuestions">
+            <li>
+                {{newQuestion}}
+            </li>
+        </div>
+        
+        <h2 style="font-size: 20px;">Staged New Answers:</h2>
+        <div data-ng-repeat="newAnswer in newAnswers">
+            <li>
+                {{newAnswer}}
+            </li>
+        </div>        
+
+        <form id="flashcard-builder">
+            <input class="form-control" type="text" data-ng-model="currentNewQuestion">
+            <button class="btn btn-small btn-primary" data-ng-click="pushQuestion()">Add Question</button>
+            <br>
+            <input class="form-control" type="text" data-ng-model="currentNewAnswer">
+            <button class="btn btn-small btn-primary" data-ng-click="pushAnswer()">Add Answer</button>            
+        </form>
+
     <li>
         <a ui-sref="configuration">Configuration</a>
     </li>

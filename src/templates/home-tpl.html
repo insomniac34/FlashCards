@@ -1,13 +1,12 @@
 <!-- home.html -->
 
 <center>
-<h1>Welcome to FlashCards</h1>
-
+<h1>{{pageTitle}}</h1>
 <li>
-    <a ui-sref="flashcards">Begin</a>  
+    <button class="btn btn-large btn-primary" ui-sref="flashcards">Begin</button>  
 </li>
 <li>
-    <a ui-sref="configuration">Configuration Tool</a>  
+    <button class="btn btn-large btn-primary" ui-sref="configuration">Configuration Tool</button> 
 </li>
 
 <div ui-view>

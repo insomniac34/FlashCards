@@ -2,7 +2,7 @@
 angular.module("FlashCards", ['ngAnimate', 'ui.router', 'ui.bootstrap'])
 
 .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
-$urlRouterProvider.otherwise("state1");
+$urlRouterProvider.otherwise("home");
 $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
