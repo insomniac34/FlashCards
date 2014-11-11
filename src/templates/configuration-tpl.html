@@ -1,13 +1,17 @@
 <center>
     <h1>{{pageTitle}}</h1>
 
+        <br>
+            <div alert data-ng-repeat="notification in notifications" type="{{notification.type}}" close="closeNotification($index)">{{notification.msg}}</div>
+        <br>
+
         <h2 style="font-size: 20px;">Staged New Questions:</h2>
         <div data-ng-repeat="newQuestion in newQuestions">
             <li>
                 {{newQuestion}}
             </li>
         </div>
-        
+
         <h2 style="font-size: 20px;">Staged New Answers:</h2>
         <div data-ng-repeat="newAnswer in newAnswers">
             <li>
@@ -22,6 +26,8 @@
             <input class="form-control" type="text" data-ng-model="currentNewAnswer">
             <button class="btn btn-small btn-primary" data-ng-click="pushAnswer()">Add Answer</button>            
         </form>
+
+        <button class="btn btn-lg btn-default" data-ng-click="save()">Save Staged Flashcards</button>
 
     <li>
         <a ui-sref="configuration">Configuration</a>

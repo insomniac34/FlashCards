@@ -10,7 +10,7 @@
 
 angular.module('FlashCards')
 
-.controller('ConfigurationController', ['FlashCardsDataService', '$scope', '$http', function ConfigurationController(FlashCardsDataService, $scope, $http) {
+.controller('ConfigurationController', ['$log', '$scope', '$http', 'FlashCardsDataService', function ConfigurationController($log, $scope, $http, FlashCardsDataService) {
     $scope.pageTitle = "FlashCards Configuration Tool";    
     $scope.notifications = [];
     $scope.newFlashCards = [];
@@ -18,6 +18,7 @@ angular.module('FlashCards')
     $scope.isMultiQuestionAnswers = false;
     $scope.newQuestions = [];
     $scope.newAnswers = [];
+    $scope.flashCardList = [];
 
     $scope.submitNewMultiQuestionFlashCard = function() {
         if (multiQuestionIsPossible()) {
@@ -38,7 +39,7 @@ angular.module('FlashCards')
         else {
             $scope.notifications.push({
                 msg: 'Unable to save MultiQuestion flashcard, number of questions must match number of answers!',
-                type: 'failure'
+                type: 'warning'
             });
         }   
     };
@@ -48,8 +49,24 @@ angular.module('FlashCards')
     };
 
     $scope.save = function() {
-        FlashCardsDataService.submitFlashCardData(params).then(function(response) {
+        if ($scope.newFlashCards.length === 0 && $scope.newMultiQuestionFlashCards.length === 0) {
+            $log.info("no data to save!");
+            return;
+        }
+        $log.info("saving data!");
 
+        var params = {
+            flashcards: $scope.newFlashCards,
+            multiQuestionFlashCards: $scope.newMultiQuestionFlashCards
+        };  
+
+        FlashCardsDataService.submitFlashCardData(params).then(function(response) {
+            if (response) {
+                $scope.notifications.push({msg: 'Flashcard data has been saved!', type: 'success'});
+            }
+            else {
+                $scope.notifications.push({msg: 'There was an error processing your request!', type: 'warning'});
+            }
         });
     };
 
@@ -65,7 +82,7 @@ angular.module('FlashCards')
         else {
             $scope.notifications.push({
                 msg: 'You cannot do that!', 
-                type: 'failure'
+                type: 'warning'
             });
             $scope.currentNewQuestion = ""; 
         }
@@ -80,11 +97,15 @@ angular.module('FlashCards')
         else {
             $scope.notifications.push({
                 msg: 'You cannot do that!', 
-                type: 'failure'
+                type: 'warning'
             });
             $scope.currentNewAnswer = ""; 
         }
     };
+
+    $scope.closeNotification = function(index) {
+        $scope.notifications.splice(index, 1);
+    };      
 
     function multiQuestionIsPossible() {
         return ($scope.newQuestions.length === $scope.newAnswers.length);
