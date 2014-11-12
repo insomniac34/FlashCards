@@ -15,7 +15,7 @@ angular.module('FlashCards')
     $scope.notifications = [];
     $scope.newFlashCards = [];
     $scope.newMultiQuestionFlashCards = [];
-    $scope.isMultiQuestionAnswers = false;
+    $scope.isMultipleAnswers = false;
     $scope.newQuestions = [];
     $scope.newAnswers = [];
     $scope.flashCardList = [];

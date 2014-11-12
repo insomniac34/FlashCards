@@ -1,8 +1,8 @@
 
 
-<div class="row">
+<div class="row" style="background-color:#333;">
     <div class="col-md-2"> </div>
-    <div class="col-md-4"><h1 style="font-size: 30px;">{{pageTitle}}</h1></div>
+    <div class="col-md-4"><h1 style="font-size: 30px;color:#fff;">{{pageTitle}}</h1></div>
 </div>
 
 <div>
@@ -15,18 +15,58 @@
     </div>
     
     <div class="row">
-        <div class="col-md-1"> </div>
-        <div class="col-md-4">
-            <input class="form-control" style="width: 50%;" type="text" data-ng-model="currentNewQuestion">
+ 
+
+        <!-- Sidebar -->
+        <div class="col-xs-2 sidebar" style="background-color: #333;">
+          <ul class="nav nav-sidebar">
+            <li><a href="#">Overview</a></li>
+            <li><a href="#">View Selected Ticket</a></li>
+            <li><a href="#">View Unassigned Tickets</a></li> <!-- data-ng-click="viewUnassignedTickets()" -->
+            <li><a href="#">Export</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">View All Tickets</a></li> <!-- data-ng-click="viewAllTickets()" -->
+            <li><a href="">View My Tickets</a></li> <!-- data-ng-click="viewMyTickets()" -->
+            <li><a href="">Sort</a></li>
+          </ul>
+        </div>
+
+        <div class="col-xs-4">
+            <input class="form-control" style="width: 50%;display:inline;" type="text" data-ng-model="currentNewQuestion">
             <button class="btn btn-small btn-primary" data-ng-click="pushQuestion()">Add Question</button>           
         </div>
 
-        <div class="col-md-4">
-            <input class="form-control" style="width: 50%;" type="text" data-ng-model="currentNewAnswer">
+        <div class="col-xs-4">
+            <input class="form-control" style="width: 50%;display:inline;" type="text" data-ng-model="currentNewAnswer">
             <button class="btn btn-small btn-primary" data-ng-click="pushAnswer()">Add Answer</button>             
         </div>
+
+        <div class="col-xs-4">
+            <h2 style="font-size: 20px;">Current Card Questions:</h2>
+            <table data-ng-repeat="newQuestion in newQuestions">
+                <td>{{newQuestion}}</td>
+            </table>
+            <button class="btn btn-small btn-primary" data-ng-click="clearQuestions()">clear</button>
+        </div>
+        
+        <div class="col-xs-4">
+            <h2 style="font-size: 20px;">Current Card Answers:</h2>
+            <table data-ng-repeat="newAnswer in newAnswers">
+                <td>{{newAnswer}}</td>
+            </table>
+            <button class="btn btn-small btn-primary" data-ng-click="clearAnswers()">clear</button>
+        </div>
+
+        <div class="col-md-1"> </div>
+        <div class="col-md-4">
+            <button class="btn btn-lg btn-secondary" data-ng-click="createFlashCard()">Create Flashcard</button>              
+            <input type="checkbox">
+        </div>   
+        
     </div>
 
+    <!--
     <div class="row"> 
         <div class="col-md-1"> </div>   
         <div class="col-md-4">
@@ -45,14 +85,17 @@
             <button class="btn btn-small btn-primary" data-ng-click="clearAnswers()">clear</button>
         </div>   
     </div>
+    
 
     <div class="row">
         <div class="col-md-1"> </div>
         <div class="col-md-2"> </div>
         <div class="col-md-4">
             <button class="btn btn-lg btn-secondary" data-ng-click="createFlashCard()">Create Flashcard</button>              
+            <input type="checkbox">
         </div>         
     </div>
+    -->
 
     <div class="row">
         <div class="col-md-1"> </div>
