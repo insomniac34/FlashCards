@@ -1,38 +1,51 @@
-<center>
-    <h1>{{pageTitle}}</h1>
 
+
+    <h1>{{pageTitle}}</h1>
+    <div>
         <br>
             <div alert data-ng-repeat="notification in notifications" type="{{notification.type}}" close="closeNotification($index)">{{notification.msg}}</div>
         <br>
-
-        <h2 style="font-size: 20px;">Staged New Questions:</h2>
-        <div data-ng-repeat="newQuestion in newQuestions">
-            <li>
-                {{newQuestion}}
-            </li>
+        <div data-ng-repeat="flashCard in FlashCards">
+            
         </div>
+        <center>
+            <div class="container">            
+                <div class="container" style="display: table-cell;">
+                    <h2 style="font-size: 20px;">Staged New Questions:</h2>
+                    <table data-ng-repeat="newQuestion in newQuestions">
+                        <td>{{newQuestion}}</td>
+                    </table>
+                    <button class="btn btn-small btn-primary" data-ng-click="clearQuestions()">clear</button>
+                </div>
+                
+                <div class="container" style="display: table-cell;">
+                    <h2 style="font-size: 20px;">Staged New Answers:</h2>
+                    <table data-ng-repeat="newAnswer in newAnswers">
+                        <td>{{newAnswer}}</td>
+                    </table>
+                    <button class="btn btn-small btn-primary" data-ng-click="clearAnswers()">clear</button>
+                </div>   
+            </div>     
 
-        <h2 style="font-size: 20px;">Staged New Answers:</h2>
-        <div data-ng-repeat="newAnswer in newAnswers">
-            <li>
-                {{newAnswer}}
-            </li>
-        </div>        
+            <div class="container" style="display: table-cell;">
+                <div class="form-group" style="display: table-cell;">
+                    <input class="form-control" type="text" data-ng-model="currentNewQuestion">
+                    <button class="btn btn-small btn-primary" data-ng-click="pushQuestion()">Add Question</button>           
+                </div>
 
-        <form id="flashcard-builder">
-            <input class="form-control" type="text" data-ng-model="currentNewQuestion">
-            <button class="btn btn-small btn-primary" data-ng-click="pushQuestion()">Add Question</button>
-            <br>
-            <input class="form-control" type="text" data-ng-model="currentNewAnswer">
-            <button class="btn btn-small btn-primary" data-ng-click="pushAnswer()">Add Answer</button>            
-        </form>
+                <div class="form-group" style="display: table-cell;">
+                    <input class="form-control" type="text" data-ng-model="currentNewAnswer">
+                    <button class="btn btn-small btn-primary" data-ng-click="pushAnswer()">Add Answer</button>             
+                </div>
+            </div>
+        </center>
 
-        <button class="btn btn-lg btn-default" data-ng-click="save()">Save Staged Flashcards</button>
+        <button class="btn btn-lg btn-secondary">Create Flashcard</button>
 
-    <li>
-        <a ui-sref="configuration">Configuration</a>
-    </li>
-    <li>
-        <a ui-sref="flashcards">Begin</a>  
-    </li>
-</center>
+        <li>
+            <a ui-sref="configuration">Configuration</a>
+        </li>
+        <li>
+            <a ui-sref="flashcards">Begin</a>  
+        </li>
+    </div>

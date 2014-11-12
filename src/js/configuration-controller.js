@@ -48,6 +48,34 @@ angular.module('FlashCards')
 
     };
 
+    $scope.createFlashCard = function() {
+        if ($scope.newAnswers.length === 0 || $scope.newQuestions.length === 0) {
+            $scope.notifications.push({
+                msg: 'You must have at least one question and answer to make a new flashcard!',
+                type: 'warning'
+            });
+            return;
+        }
+
+        if ($scope.newAnswers.length !== $scope.newQuestions.length) {
+            $scope.notifications.push({
+                msg: 'Cannot create flashcard; all questions must map to answers!',
+                type: 'warning'
+            });
+            return;
+        }
+
+        
+    };
+
+    $scope.clearQuestions = function() {
+        $scope.newQuestions = [];
+    };
+
+    $scope.clearAnswers = function() {
+        $scope.newAnswers = [];
+    };
+
     $scope.save = function() {
         if ($scope.newFlashCards.length === 0 && $scope.newMultiQuestionFlashCards.length === 0) {
             $log.info("no data to save!");
@@ -116,7 +144,6 @@ angular.module('FlashCards')
             questionAnswerPairings: [],
             hints: []
         };
-
         angular.forEach(questionAnswerPairings, function(questionAnswerPairing) {
             newFlashCard.push(questionAnswerPairing);
         });
