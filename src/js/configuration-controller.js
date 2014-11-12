@@ -65,7 +65,22 @@ angular.module('FlashCards')
             return;
         }
 
-        
+        var newQuestionAnswerPairings = [];
+        for (var i = 0; i < $scope.newQuestions.length; i++) {
+            var newQuestionAnswerPairing = {
+                question: angular.copy($scope.newQuestions[i]),
+                answer: angular.copy($scope.newAnswers[i])
+            };
+            newQuestionAnswerPairings.push(newQuestionAnswerPairing);
+        }
+
+        $scope.newFlashCards.push(createNewFlashCard(newQuestionAnswerPairings));
+        $scope.notifications.push({
+            msg: 'New flashcard succesfully saved!',
+            type: 'success'
+        });
+        $scope.newQuestions = [];
+        $scope.newAnswers = [];        
     };
 
     $scope.clearQuestions = function() {
@@ -145,11 +160,9 @@ angular.module('FlashCards')
             hints: []
         };
         angular.forEach(questionAnswerPairings, function(questionAnswerPairing) {
-            newFlashCard.push(questionAnswerPairing);
+            newFlashCard.questionAnswerPairings.push(questionAnswerPairing);
         });
-        angular.forEach(hints, function(hint) {
-            newFlashCard.push(hint);
-        });
+
 
         return newFlashCard;
     }
