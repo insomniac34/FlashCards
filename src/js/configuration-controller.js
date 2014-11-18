@@ -24,11 +24,24 @@ angular.module('FlashCards')
     $scope.flashCardOptions = [];
 
     /* retrieve up-to-date data from server */
-    FlashCardsDataService.getFlashCardData().then(function(response) {
-        $log.info("data received: " + JSON.stringify(response));
-        if (response) {
-            //WARNING: assigning the global array to the response object F's everything in the A
-            //$scope.newFlashCards = response;            
+    FlashCardsDataService.getFlashCardData().then(function(results) {
+        $log.info("data received: " + JSON.stringify(results));
+        if (results === undefined || results === null) {
+            $scope.notifications.push({
+                msg: 'There was an error processing your request',
+                type: 'warning'
+            });   
+        }
+        else {
+            angular.forEach(results, function(result) {
+                var resultObj = JSON.parse(result);
+                $log.info("resultObj is: " + JSON.stringify(resultObj));     
+        
+                $scope.newFlashCards.push(createNewFlashCard([{
+                    question: resultObj.questions,
+                    answer: resultObj.answers
+                }]));
+            });
         }
     });
 
