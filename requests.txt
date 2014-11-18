@@ -1,0 +1,17 @@
+Request: /
+Request: /favicon.ico
+Request: /src/
+Request: /resources/lib/css/dist/css/bootstrap.min.css
+Request: /src/css/style.css
+Request: /resources/lib/css/dist/js/ui-bootstrap-tpls.js
+Request: /resources/lib/js/angular-ui-router.js
+Request: /resources/lib/css/dist/js/bootstrap.min.js
+Request: /src/FlashCards.js
+Request: /src/js/home-controller.js
+Request: /src/js/flashcards-controller.js
+Request: /src/js/configuration-controller.js
+Request: /src/js/services/flashcards-data-service.js
+Request: /src/templates/home-tpl.html
+Request: /src/templates/configuration-tpl.html
+Request: /src/blah.php
+
