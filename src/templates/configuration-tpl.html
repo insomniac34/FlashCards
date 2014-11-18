@@ -1,69 +1,129 @@
 
-
 <div class="row" style="background-color:#333;">
     <div class="col-md-2"> </div>
     <div class="col-md-4"><h1 style="font-size: 30px;color:#fff;">{{pageTitle}}</h1></div>
 </div>
 
-<div>
+<div>    
     <div class="row">
-        <div class="col-md-1"> </div>
-        <div class="col-md-2"> </div>    
-        <div class="col-md-4">
-            <div alert data-ng-repeat="notification in notifications" type="{{notification.type}}" close="closeNotification($index)">{{notification.msg}}</div>                    
-        </div>
-    </div>
-    
-    <div class="row">
- 
-
         <!-- Sidebar -->
-        <div class="col-xs-2 sidebar" style="background-color: #333;">
+        <div class="col-xs-2 sidebar" style="background-color: #333;height:100vh;">
           <ul class="nav nav-sidebar">
-            <li><a href="#">Overview</a></li>
-            <li><a href="#">View Selected Ticket</a></li>
-            <li><a href="#">View Unassigned Tickets</a></li> <!-- data-ng-click="viewUnassignedTickets()" -->
-            <li><a href="#">Export</a></li>
+            <li><a href="#">Configuration Tool</a></li>
+            <li><a href="#">My FlashCards</a></li>
+            <li><a href="#">Home</a></li> <!-- data-ng-click="viewUnassignedTickets()" -->
+            <li><a href="#">Logout</a></li>
           </ul>
           <ul class="nav nav-sidebar">
-            <li><a href="">View All Tickets</a></li> <!-- data-ng-click="viewAllTickets()" -->
-            <li><a href="">View My Tickets</a></li> <!-- data-ng-click="viewMyTickets()" -->
+            <li><a href="">View All FlashCards</a></li> <!-- data-ng-click="viewAllTickets()" -->
+            <li><a href="">View FlashCards by Course</a></li> <!-- data-ng-click="viewMyTickets()" -->
             <li><a href="">Sort</a></li>
           </ul>
         </div>
 
-        <div class="col-xs-4">
+        <div class="col-xs-4" style="padding:5px;">
             <input class="form-control" style="width: 50%;display:inline;" type="text" data-ng-model="currentNewQuestion">
             <button class="btn btn-small btn-primary" data-ng-click="pushQuestion()">Add Question</button>           
         </div>
 
-        <div class="col-xs-4">
+        <div class="col-xs-4" style="padding:5px;">
             <input class="form-control" style="width: 50%;display:inline;" type="text" data-ng-model="currentNewAnswer">
             <button class="btn btn-small btn-primary" data-ng-click="pushAnswer()">Add Answer</button>             
         </div>
 
-        <div class="col-xs-4">
-            <h2 style="font-size: 20px;">Current Card Questions:</h2>
-            <table data-ng-repeat="newQuestion in newQuestions">
-                <td>{{newQuestion}}</td>
-            </table>
-            <button class="btn btn-small btn-primary" data-ng-click="clearQuestions()">clear</button>
-        </div>
-        
-        <div class="col-xs-4">
-            <h2 style="font-size: 20px;">Current Card Answers:</h2>
-            <table data-ng-repeat="newAnswer in newAnswers">
-                <td>{{newAnswer}}</td>
-            </table>
-            <button class="btn btn-small btn-primary" data-ng-click="clearAnswers()">clear</button>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-3"> </div>   
+        <div class="col-xs-4" style="padding:10px;">
+            <div alert data-ng-repeat="notification in notifications" type="{{notification.type}}" close="closeNotification($index)">{{notification.msg}}</div>                    
         </div>
 
-        <div class="col-md-1"> </div>
-        <div class="col-md-4">
+        <div class="col-xs-8" style="padding-left:5px;">
+            <table class="table table-hover" id = "theTable" border = "1">
+                <tr id="row0" align = 'center'>
+                    <td>
+                        <span>
+                            <h2 style="font-size: 20px;display:inline;">Current Questions</h2>
+                            <button class="btn btn-small btn-primary" data-ng-click="clearQuestions()">clear</button>             
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            <h2 style="font-size: 20px;display:inline;">Current Answers</h2>
+                            <button class="btn btn-small btn-primary" data-ng-click="clearAnswers()">clear</button>                                   
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div data-ng-repeat="newQuestion in newQuestions">
+                            {{newQuestion}}
+                        </div>                        
+                    </td>
+                    <td>
+                        <div data-ng-repeat="newAnswer in newAnswers">
+                            {{newAnswer}}
+                        </div>                        
+                    </td>
+                </tr>
+            </table>        
+        </div>
+
+        <div class="col-xs-3"></div>
+            
+        <div class="col-xs-4">
             <button class="btn btn-lg btn-secondary" data-ng-click="createFlashCard()">Create Flashcard</button>              
             <input type="checkbox">
         </div>   
-        
+
+        <div class="col-xs-8" style="padding:5px;" data-ng-show="newFlashCards.length > 0">
+            <h1>Current FlashCards</h1> 
+
+            <div class="btn-group"> <!-- left/right/middle -->
+                <label class="btn btn-success" data-ng-click="displayOption()" ng-model="radioModel" btn-radio="'Left'">Show All</label>
+                <label class="btn btn-success" data-ng-click="displayOption()" ng-model="radioModel" btn-radio="'Middle'">Show Saved</label>
+                <label class="btn btn-success" data-ng-click="displayOption()" ng-model="radioModel" btn-radio="'Right'">Show Unsaved</label>
+            </div>
+            <table class="table table-hover" border = "1">
+                <th>
+                    <tr id="row0" align = 'center'>
+                        <td>
+                            <span>
+                                <h2 style="font-size: 20px;display:inline;">Front</h2>
+                            </span>
+                        </td>
+                        <td>
+                            <span>
+                                <h2 style="font-size: 20px;display:inline;">Back</h2>
+                            </span>
+                        </td>
+                        <td>
+                            <span>
+                                <h2 style="font-size: 20px;display:inline;">Options</h2>
+                            </span>
+                        </td>                        
+                    </tr>
+                </th>    
+                <tbody data-ng-repeat="flashcard in newFlashCards">
+                    <tr data-ng-repeat="pairing in flashcard.questionAnswerPairings"> 
+                        <td>
+                            <div>
+                                {{pairing.question}}
+                            </div>                        
+                        </td>
+                        <td>
+                            <div>
+                                {{pairing.answer}}
+                            </div>                        
+                        </td>
+                        <td>
+                            <button class="glyphicon glyphicon-remove" data-ng-click="deleteFlashCard($index)"></button>                       
+                        </td>                        
+                    </tr>                    
+                </tbody>
+            </table>  
+            <button class="btn btn-lg btn-secondary" data-ng-click="save()">Save All</button>
+        </div>
+
     </div>
 
     <!--

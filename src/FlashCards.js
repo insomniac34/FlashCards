@@ -7,19 +7,16 @@ $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-ur
 $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
     $stateProvider
-
     .state('home', {
       url: "/home",
       templateUrl: "templates/home-tpl.html",
       controller: "HomeController"
     })
-
     .state('flashcards', {
       url: "/flashcards",
       templateUrl: "templates/flashcards-tpl.html",
       controller: "FlashCardsController"
     })
-
     .state('configuration', {
       url: '/configuration',
       templateUrl: 'templates/configuration-tpl.html',

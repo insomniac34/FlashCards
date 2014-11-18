@@ -19,6 +19,18 @@ angular.module('FlashCards')
     $scope.newQuestions = [];
     $scope.newAnswers = [];
     $scope.flashCardList = [];
+    $scope.radioModel = "Left";
+    $scope.displayed = [];
+    $scope.flashCardOptions = [];
+
+    /* retrieve up-to-date data from server */
+    FlashCardsDataService.getFlashCardData().then(function(response) {
+        $log.info("data received: " + JSON.stringify(response));
+        if (response) {
+            //WARNING: assigning the global array to the response object F's everything in the A
+            //$scope.newFlashCards = response;            
+        }
+    });
 
     $scope.submitNewMultiQuestionFlashCard = function() {
         if (multiQuestionIsPossible()) {
@@ -48,6 +60,22 @@ angular.module('FlashCards')
 
     };
 
+    $scope.showFlashCardOptions = function(index) {
+        $scope.flashCardOptions[index] = ($scope.flashCardOptions[index]) ? true : false;
+    };
+
+    $scope.deleteFlashCard = function(index) {
+        var tempArray = angular.copy($scope.newFlashCards);
+        $scope.newFlashCards = [];
+        var i = 0;
+        angular.forEach(tempArray, function(obj) {
+            if (i != index) {
+                $scope.newFlashCards.push(obj);    
+            }
+            i+=1;
+        });
+    };    
+
     $scope.createFlashCard = function() {
         if ($scope.newAnswers.length === 0 || $scope.newQuestions.length === 0) {
             $scope.notifications.push({
@@ -76,7 +104,7 @@ angular.module('FlashCards')
 
         $scope.newFlashCards.push(createNewFlashCard(newQuestionAnswerPairings));
         $scope.notifications.push({
-            msg: 'New flashcard succesfully saved!',
+            msg: 'New flashcard succesfully created!',
             type: 'success'
         });
         $scope.newQuestions = [];
@@ -89,6 +117,23 @@ angular.module('FlashCards')
 
     $scope.clearAnswers = function() {
         $scope.newAnswers = [];
+    };
+
+    $scope.displayOption = function() {
+        //$log.info("CLICKED! $scope.radioModel is: " + $scope.radioModel);
+        switch($scope.radioModel) {
+            case "Left":
+                $log.info("left!");
+                break;
+            case "Right":
+                $log.info("right!");
+                break;
+            case "Middle":
+                $log.info("middle!");
+                break;
+            default:
+                break;
+        }
     };
 
     $scope.save = function() {
@@ -152,7 +197,7 @@ angular.module('FlashCards')
 
     function multiQuestionIsPossible() {
         return ($scope.newQuestions.length === $scope.newAnswers.length);
-    };
+    }
 
     function createNewFlashCard(questionAnswerPairings, hints) {
         var newFlashCard = {

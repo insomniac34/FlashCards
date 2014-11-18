@@ -1,17 +1,21 @@
 
 angular.module('FlashCards')
 
-.service('FlashCardsDataService', ['$http', function FlashCardsDataService($http) {
+.service('FlashCardsDataService', ['$http', '$log', function FlashCardsDataService($http, $log) {
     
     this.submitFlashCardData = function(params) {
-        return $http.post('newFlashCard.htm', {data: params, action: 'submitFlashCards'}, {'Content-Type': 'application/x-www-form-urlencoded'}).then(function(response) {
-            return response.data[0];
+        $log.info("submitting flashcard data!");
+        return $http.post('serverv3.js', {data: params, action: 'submitFlashCards'}, {'Content-Type': 'application/x-www-form-urlencoded'}).then(function(response) {
+            $log.info('Response received!');
+            return response;
         });
     };
 
     this.getFlashCardData = function() {
-        return $http.post('newFlashCard.htm', {date: new Date().toString(), action: 'getFlashCards'}, {'Content-Type': 'application/x-www-form-urlencoded'}).then(function(response) {
-            return response.data[0];
+        $log.info("retrieving flashcard data!");
+        return $http.post('serverv3.js', {date: new Date().toString(), action: 'getFlashCards'}, {'Content-Type': 'application/x-www-form-urlencoded'}).then(function(response) {
+            $log.info('Response received!');
+            return response;
         });        
     };
 }])
