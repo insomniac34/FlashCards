@@ -7,7 +7,6 @@
  *          Ordered Answer: A question whose answer is N answers in an explicit order
  */         
 
-
 angular.module('FlashCards')
 
 .controller('ConfigurationController', ['$log', '$scope', '$http', 'FlashCardsDataService', function ConfigurationController($log, $scope, $http, FlashCardsDataService) {
@@ -17,9 +16,9 @@ angular.module('FlashCards')
     $scope.newMultiQuestionFlashCards = [];
     $scope.isMultipleAnswers = false;
     $scope.newQuestions = [];
+    $scope.radioModel = "Left";
     $scope.newAnswers = [];
     $scope.flashCardList = [];
-    $scope.radioModel = "Left";
     $scope.displayed = [];
     $scope.flashCardOptions = [];
 
@@ -39,8 +38,11 @@ angular.module('FlashCards')
         
                 $scope.newFlashCards.push(createNewFlashCard([{
                     question: resultObj.questions,
-                    answer: resultObj.answers
+                    answer: resultObj.answers,
                 }]));
+
+                /* since these come from the server, they are, by definition, saved */
+                $scope.newFlashCards[$scope.newFlashCards.length-1].saved = true;
             });
         }
     });
@@ -133,18 +135,32 @@ angular.module('FlashCards')
     };
 
     $scope.displayOption = function() {
-        //$log.info("CLICKED! $scope.radioModel is: " + $scope.radioModel);
         switch($scope.radioModel) {
             case "Left":
-                $log.info("left!");
+                $log.info("show all!");
+                angular.forEach($scope.newFlashCards, function(newFlashCard) {
+                    newFlashCard.display = true;
+                });
                 break;
+
             case "Right":
-                $log.info("right!");
+                $log.info("show unsaved!");
+                angular.forEach($scope.newFlashCards, function(newFlashCard) {
+                    newFlashCard.display = (!newFlashCard.saved) ? true : false;
+                });
                 break;
+
             case "Middle":
-                $log.info("middle!");
+                $log.info("show saved!");
+                angular.forEach($scope.newFlashCards, function(newFlashCard) {
+                    newFlashCard.display = (newFlashCard.saved) ? true : false;
+                });
                 break;
+
             default:
+                angular.forEach($scope.newFlashCards, function(newFlashCard) {
+                    newFlashCard.display = true;
+                });
                 break;
         }
     };
@@ -215,12 +231,14 @@ angular.module('FlashCards')
     function createNewFlashCard(questionAnswerPairings, hints) {
         var newFlashCard = {
             questionAnswerPairings: [],
-            hints: []
+            hints: [],
+            display: true,
+            saved: false
         };
+
         angular.forEach(questionAnswerPairings, function(questionAnswerPairing) {
             newFlashCard.questionAnswerPairings.push(questionAnswerPairing);
         });
-
 
         return newFlashCard;
     }

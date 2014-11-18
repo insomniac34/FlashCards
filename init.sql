@@ -10,13 +10,6 @@ create table if not exists users (
     PRIMARY KEY(id)
 );
 
-insert into users values (
-    NULL,
-    'ty',
-    SHA2('password', 224),
-    'tpr11@pitt.edu'
-);
-
 create table if not exists flashcards (
     id INT NOT NULL AUTO_INCREMENT,
     user VARCHAR(100),
@@ -25,11 +18,10 @@ create table if not exists flashcards (
     PRIMARY KEY(id)
 );
 
-insert into flashcards values (
-    NULL,
-    'ty',
-    'why is the sky blue?',
-    'because'
+create table if not exists sessions (
+    session_id INT NOT NULL AUTO_INCREMENT,
+    user VARCHAR(100),
+    expiration_date DATE NOT NULL)
 );
 
 commit;
