@@ -253,19 +253,6 @@ angular.module('FlashCards')
     }
 }])
 
-.controller('ConfirmationController', ['$scope', '$log', '$http', '$controller', function ContactUsController($scope, $log, $http, $controller) {
-
-    $controller('ConfigurationController', {$scope: $scope});
-
-    $scope.email = {};
-    $scope.empty = {};
-
-    $scope.reset = function() {
-        //$log.info("resetting email form!");
-        $scope.email = angular.copy($scope.empty);
-    };
-}])
-
 ;
 
 
