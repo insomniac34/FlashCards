@@ -16,6 +16,7 @@
           </ul>
           <ul class="nav nav-sidebar">
             <li><a href="">View All FlashCards</a></li> <!-- data-ng-click="viewAllTickets()" -->
+            <li>Contact Us</a></li> 
             <li><a href="">View FlashCards by Course</a></li> <!-- data-ng-click="viewMyTickets()" -->
             <li><a href="">Sort</a></li>
           </ul>
@@ -79,9 +80,9 @@
             <h1>Current FlashCards</h1> 
 
             <div class="btn-group"> <!-- left/right/middle -->
-                <label class="btn btn-success" data-ng-click="displayOption()" ng-model="radioModel" btn-radio="'Left'" uncheckable>Show All</label>
-                <label class="btn btn-success" data-ng-click="displayOption()" ng-model="radioModel" btn-radio="'Middle'" uncheckable>Show Saved</label>
-                <label class="btn btn-success" data-ng-click="displayOption()" ng-model="radioModel" btn-radio="'Right'" uncheckable>Show Unsaved</label>
+                <label class="btn btn-success" ng-model="radioModel" btn-radio="'Left'" uncheckable>Show All</label>
+                <label class="btn btn-success" ng-model="radioModel" btn-radio="'Middle'" uncheckable>Show Saved</label>
+                <label class="btn btn-success" ng-model="radioModel" btn-radio="'Right'" uncheckable>Show Unsaved</label>
             </div>
             <table class="table table-hover" border = "1">
                 <th>
@@ -116,7 +117,8 @@
                             </div>                        
                         </td>
                         <td>
-                            <button class="glyphicon glyphicon-remove" data-ng-click="deleteFlashCard($index)"></button>                       
+                            <!-- data-ng-click="deleteFlashCard($index)" -->
+                            <button class="glyphicon glyphicon-remove" data-ng-click="deleteFlashCard($parent.$index)"></button>                       
                         </td>                        
                     </tr>                    
                 </tbody>

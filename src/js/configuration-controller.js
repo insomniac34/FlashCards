@@ -16,7 +16,7 @@ angular.module('FlashCards')
     $scope.newMultiQuestionFlashCards = [];
     $scope.isMultipleAnswers = false;
     $scope.newQuestions = [];
-    $scope.radioModel = "Left";
+    $scope.radioModel = "Middle";
     $scope.newAnswers = [];
     $scope.flashCardList = [];
     $scope.displayed = [];
@@ -45,6 +45,46 @@ angular.module('FlashCards')
                 $scope.newFlashCards[$scope.newFlashCards.length-1].saved = true;
             });
         }
+    });
+
+    $scope.$watch('radioModel', function(radioModel) {
+
+        if (radioModel === null) {
+            return;
+        }
+
+        angular.forEach($scope.newFlashCards, function(newFlashCard) {
+            newFlashCard.display = false;
+        });
+
+        switch(radioModel) {
+            case "Left":
+                $log.info("show all!");
+                angular.forEach($scope.newFlashCards, function(newFlashCard) {
+                    newFlashCard.display = true;
+                });
+                break;
+
+            case "Right":
+                $log.info("show unsaved!");
+                angular.forEach($scope.newFlashCards, function(newFlashCard) {
+                    newFlashCard.display = (!newFlashCard.saved) ? true : false;
+                });
+                break;
+
+            case "Middle":
+                $log.info("show saved!");
+                angular.forEach($scope.newFlashCards, function(newFlashCard) {
+                    newFlashCard.display = (newFlashCard.saved) ? true : false;
+                });
+                break;
+
+            default:
+                angular.forEach($scope.newFlashCards, function(newFlashCard) {
+                    newFlashCard.display = true;
+                });
+                break;
+        }        
     });
 
     $scope.submitNewMultiQuestionFlashCard = function() {
@@ -134,37 +174,6 @@ angular.module('FlashCards')
         $scope.newAnswers = [];
     };
 
-    $scope.displayOption = function() {
-        switch($scope.radioModel) {
-            case "Left":
-                $log.info("show all!");
-                angular.forEach($scope.newFlashCards, function(newFlashCard) {
-                    newFlashCard.display = true;
-                });
-                break;
-
-            case "Right":
-                $log.info("show unsaved!");
-                angular.forEach($scope.newFlashCards, function(newFlashCard) {
-                    newFlashCard.display = (!newFlashCard.saved) ? true : false;
-                });
-                break;
-
-            case "Middle":
-                $log.info("show saved!");
-                angular.forEach($scope.newFlashCards, function(newFlashCard) {
-                    newFlashCard.display = (newFlashCard.saved) ? true : false;
-                });
-                break;
-
-            default:
-                angular.forEach($scope.newFlashCards, function(newFlashCard) {
-                    newFlashCard.display = true;
-                });
-                break;
-        }
-    };
-
     $scope.save = function() {
         if ($scope.newFlashCards.length === 0 && $scope.newMultiQuestionFlashCards.length === 0) {
             $log.info("no data to save!");
@@ -244,4 +253,19 @@ angular.module('FlashCards')
     }
 }])
 
+.controller('ConfirmationController', ['$scope', '$log', '$http', '$controller', function ContactUsController($scope, $log, $http, $controller) {
+
+    $controller('ConfigurationController', {$scope: $scope});
+
+    $scope.email = {};
+    $scope.empty = {};
+
+    $scope.reset = function() {
+        //$log.info("resetting email form!");
+        $scope.email = angular.copy($scope.empty);
+    };
+}])
+
 ;
+
+
