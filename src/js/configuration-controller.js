@@ -21,6 +21,7 @@ angular.module('FlashCards')
     $scope.flashCardList = [];
     $scope.displayed = [];
     $scope.flashCardOptions = [];
+    $scope.deletedFlashCards = [];
 
     /* retrieve up-to-date data from server */
     FlashCardsDataService.getFlashCardData().then(function(results) {
@@ -38,7 +39,7 @@ angular.module('FlashCards')
         
                 $scope.newFlashCards.push(createNewFlashCard([{
                     question: resultObj.questions,
-                    answer: resultObj.answers,
+                    answer: resultObj.answers
                 }]));
 
                 /* since these come from the server, they are, by definition, saved */
@@ -48,7 +49,6 @@ angular.module('FlashCards')
     });
 
     $scope.$watch('radioModel', function(radioModel) {
-
         if (radioModel === null) {
             return;
         }
@@ -127,6 +127,9 @@ angular.module('FlashCards')
             if (i != index) {
                 $scope.newFlashCards.push(obj);    
             }
+            else {
+                $scope.deletedFlashCards.push(obj);
+            }
             i+=1;
         });
     };    
@@ -175,16 +178,22 @@ angular.module('FlashCards')
     };
 
     $scope.save = function() {
-        if ($scope.newFlashCards.length === 0 && $scope.newMultiQuestionFlashCards.length === 0) {
-            $log.info("no data to save!");
+        var params = {
+            flashcards: [],
+            deletedFlashCards: angular.copy($scope.deletedFlashCards),
+            multiQuestionFlashCards: angular.copy($scope.newMultiQuestionFlashCards)
+        }; 
+
+        angular.forEach($scope.newFlashCards, function(flashcard) {
+            if (!flashcard.saved) {
+                params.flashcards.push(flashcard);
+            }
+        }); 
+
+        if (params.flashcards.length === 0) {
+            $scope.notifications.push({msg: 'No new flashcards to save!', type: 'danger'});
             return;
         }
-        $log.info("saving data!");
-
-        var params = {
-            flashcards: $scope.newFlashCards,
-            multiQuestionFlashCards: $scope.newMultiQuestionFlashCards
-        };  
 
         FlashCardsDataService.submitFlashCardData(params).then(function(response) {
             if (response) {

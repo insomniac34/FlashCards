@@ -16,6 +16,7 @@ var connection = mysql.createConnection(
 
 var mysql = require('mysql');
 var ns = require('node-static');
+var orm = require('./orm.js');
 var fileServer = new ns.Server('./');
 
 require('http').createServer(function (request, response) {
@@ -25,7 +26,7 @@ require('http').createServer(function (request, response) {
             // serverside actions based on post url:
             switch(request.url) {
 
-                case '/src/serverv3.js': 
+                case '/src/server.js': 
                     console.log("POST TO SERVER!");
 
                     var dbResults = [];
@@ -33,43 +34,54 @@ require('http').createServer(function (request, response) {
                     request.on('data', function(chunk) {
                         console.log("Received body data:");
                         console.log(JSON.parse(chunk).toString());
-                        var data = JSON.parse(chunk);
-                        console.log(data.action);
+                        var jsonPayload = JSON.parse(chunk);
+                        console.log(jsonPayload.action);
 
-                        switch(data.action) {
+                        switch(jsonPayload.action) {
 
                             case 'submitFlashCards':
+                                console.log("action: SUBMITFLASHCARDS!");
                                 console.log('flashcard data submitted!');
+                                console.log('Value of data to be synced with backend: ' + JSON.stringify(jsonPayload));
+
+                                orm.createFlashcards(jsonPayload.data.flashcards);
+                                orm.deleteFlashcards(jsonPayload.data.deletedFlashCards);
+
+                                response.writeHead(200, "OK", {'Content-Type': 'application/json'});
+                                response.write(JSON.stringify({results: true}));      
+                                response.end(); 
+
                                 break;
 
                             case 'getFlashCards':
-                                var con = mysql.createConnection({
-                                    host: 'localhost',
-                                    user: 'root',
-                                    password: 'password',
-                                    database: 'test'
-                                });
-
-                                var getFlashCardsQuery = "SELECT * FROM flashcards";
-                                con.query(getFlashCardsQuery, function(err, rows, fields) {
-                                    if (err) {
-                                        throw err;
-                                    }
-
-                                    rows.forEach(function(row) {
-                                        //console.log("pushing : " + JSON.stringify(row));
-                                        dbResults.push(JSON.stringify(row));
-                                    });
-
-                                    response.writeHead(200, "OK", {'Content-Type': 'application/json'});
-                                    console.log("WRITING: " + dbResults.toString());
-                                    response.write(JSON.stringify({results: dbResults}));      
-                                    response.end();                              
-                                });
-
-                                console.log('request for flashcards received!');
+                                console.log("action: GETFLASHCARDS!");
+                                orm.retrieveAndTransmitFlashcards(response);
                                 
-                                con.end();
+                                break;
+
+                            case 'sessionInit':
+                                orm.initializeSession(
+                                    jsonPayload.data.username,
+                                    jsonPayload.data.password
+                                );
+
+                                break;
+
+                            case 'sessionEnd':
+                                orm.destroySession(
+                                    jsonPayload.data.username,
+                                    jsonPayload.data.sessionId
+                                );
+
+                                break;
+
+                            case 'userRegistration':
+                                orm.registerNewUser(
+                                    jsonPayload.data.username,
+                                    jsonPayload.data.password,
+                                    jsonPayload.data.email
+                                );
+
                                 break;
 
                             default:
@@ -111,3 +123,4 @@ require('http').createServer(function (request, response) {
         }
 
 }).listen(8080);
+

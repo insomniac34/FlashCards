@@ -22,6 +22,10 @@ $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
       templateUrl: 'templates/configuration-tpl.html',
       controller: 'ConfigurationController'
     })
-
+    .state('login', {
+      url: '/configuration',
+      templateUrl: 'templates/configuration-tpl.html',
+      controller: 'ConfigurationController'
+    })
     ;
 });

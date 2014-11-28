@@ -1,6 +1,6 @@
-create database if not exists test;
+create database if not exists flashcards;
 
-use test;
+use flashcards;
 
 create table if not exists users (
     id INT NOT NULL AUTO_INCREMENT, 
@@ -21,7 +21,9 @@ create table if not exists flashcards (
 create table if not exists sessions (
     session_id INT NOT NULL AUTO_INCREMENT,
     user VARCHAR(100),
-    expiration_date DATE NOT NULL)
+    expiration_date datetime NOT NULL,
+    session_start datetime NOT NULL,
+    PRIMARY KEY(session_id)
 );
 
 commit;

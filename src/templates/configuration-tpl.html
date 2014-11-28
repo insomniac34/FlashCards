@@ -80,12 +80,12 @@
             <h1>Current FlashCards</h1> 
 
             <div class="btn-group"> <!-- left/right/middle -->
-                <label class="btn btn-success" ng-model="radioModel" btn-radio="'Left'" uncheckable>Show All</label>
-                <label class="btn btn-success" ng-model="radioModel" btn-radio="'Middle'" uncheckable>Show Saved</label>
-                <label class="btn btn-success" ng-model="radioModel" btn-radio="'Right'" uncheckable>Show Unsaved</label>
+                <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Left'" uncheckable>Show All</label>
+                <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Middle'" uncheckable>Show Saved</label>
+                <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Right'" uncheckable>Show Unsaved</label>
             </div>
             <table class="table table-hover" border = "1">
-                <th>
+
                     <tr id="row0" align = 'center'>
                         <td>
                             <span>
@@ -103,8 +103,8 @@
                             </span>
                         </td>                        
                     </tr>
-                </th>    
-                <tbody data-ng-repeat="flashcard in newFlashCards" data-ng-show="flashcard.display">
+   
+                <tbody data-ng-repeat="flashcard in newFlashCards" data-ng-show="flashcard.display" data-ng-attr-class="{{flashcard.saved && 'succesful' || 'unsuccesful' }}">
                     <tr data-ng-repeat="pairing in flashcard.questionAnswerPairings"> 
                         <td>
                             <div>

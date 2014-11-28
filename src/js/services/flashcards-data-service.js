@@ -5,7 +5,7 @@ angular.module('FlashCards')
     
     this.submitFlashCardData = function(params) {
         $log.info("submitting flashcard data!");
-        return $http.post('serverv3.js', {data: params, action: 'submitFlashCards'}, {'Content-Type': 'application/x-www-form-urlencoded'}).then(function(response) {
+        return $http.post('server.js', {data: params, action: 'submitFlashCards'}, {'Content-Type': 'application/x-www-form-urlencoded'}).then(function(response) {
             $log.info('Response received!');
             return angular.fromJson(response).data.results;
         });
@@ -13,7 +13,7 @@ angular.module('FlashCards')
 
     this.getFlashCardData = function() {
         $log.info("retrieving flashcard data!");
-        return $http.post('serverv3.js', {date: new Date().toString(), action: 'getFlashCards'}, {'Content-Type': 'application/x-www-form-urlencoded'}).then(function(response) {
+        return $http.post('server.js', {date: new Date().toString(), action: 'getFlashCards'}, {'Content-Type': 'application/x-www-form-urlencoded'}).then(function(response) {
             $log.info('Response received!');
             return angular.fromJson(response).data.results;
         });        
