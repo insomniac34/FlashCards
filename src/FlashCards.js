@@ -1,8 +1,8 @@
 // core components:
-angular.module("FlashCards", ['ngAnimate', 'ui.router', 'ui.bootstrap'])
+angular.module("FlashCards", ['ngCookies', 'ngAnimate', 'ui.router', 'ui.bootstrap', 'LocalStorageModule'])
 
 .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
-$urlRouterProvider.otherwise("home");
+$urlRouterProvider.otherwise("login");
 $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -23,9 +23,9 @@ $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
       controller: 'ConfigurationController'
     })
     .state('login', {
-      url: '/configuration',
-      templateUrl: 'templates/configuration-tpl.html',
-      controller: 'ConfigurationController'
+      url: '/login',
+      templateUrl: 'templates/login-tpl.html',
+      controller: 'LoginController'
     })
     ;
 });

@@ -37,6 +37,17 @@ angular.module('FlashCards')
             return angular.fromJson(response).data.results;
         }); 
     };
+
+    this.verifyUserSession = function(params) {
+        var jsonPayload = {
+            data: params, 
+            action: 'verifySession'
+        };
+
+        return $http.post('server.js', jsonPayload, {'Content-Type': 'application/x-www-form-urlencoded'}).then(function(response) {
+            return angular.fromJson(response).data.results;
+        }); 
+    };
 }])
 
 ;

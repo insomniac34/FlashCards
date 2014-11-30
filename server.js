@@ -35,7 +35,7 @@ require('http').createServer(function (request, response) {
                         console.log("Received body data:");
                         console.log(JSON.parse(chunk).toString());
                         var jsonPayload = JSON.parse(chunk);
-                        console.log(jsonPayload.action);
+                        console.log("ACTION IS " + jsonPayload.action);
 
                         switch(jsonPayload.action) {
 
@@ -59,16 +59,29 @@ require('http').createServer(function (request, response) {
                                 
                                 break;
 
-                            case 'sessionInit':
+                            case 'login':
+                                console.log("User is attempting login with credentials: " + jsonPayload.data.username + " and " + jsonPayload.data.password);
                                 orm.initializeSession(
+                                    response,
                                     jsonPayload.data.username,
                                     jsonPayload.data.password
                                 );
 
                                 break;
 
-                            case 'sessionEnd':
+                            case 'verifySession':
+                                orm.purgeExpiredSessions();
+                                orm.verifySession(
+                                    response,
+                                    jsonPayload.data.username,
+                                    jsonPayload.data.sessionId
+                                );
+                                
+                                break;
+
+                            case 'logout':
                                 orm.destroySession(
+                                    response,
                                     jsonPayload.data.username,
                                     jsonPayload.data.sessionId
                                 );
@@ -76,7 +89,9 @@ require('http').createServer(function (request, response) {
                                 break;
 
                             case 'userRegistration':
+                                console.log("User is attempting to create account with credentials: " + jsonPayload.data.username + " and " + jsonPayload.data.password + " and " + jsonPayload.data.email);
                                 orm.registerNewUser(
+                                    response,
                                     jsonPayload.data.username,
                                     jsonPayload.data.password,
                                     jsonPayload.data.email

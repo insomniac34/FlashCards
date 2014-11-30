@@ -1,15 +1,48 @@
 <div>
-    <div class="form-group">
-        <input type="text" class="form-control" data-ng-model="attemptedUsername">
-        <input type="text" class="form-control" data-ng-model="attemptedPassword">
-        <button class="btn btn-large btn-primary">Login</button>
+    <div class="row">
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4">
+            <h1>FlashCards Login</h1>
+        </div>    
     </div>
+
     
-    <div class="form-group">
-        <input type="text" class="form-control" data-ng-model="newUsername">
-        <input type="text" class="form-control" data-ng-model="newEmail">
-        <input type="text" class="form-control" data-ng-model="newPassword">
-        <input type="text" class="form-control" data-ng-model="newPasswordDuplicate">
-        <button class="btn btn-large btn-primary">Register</button>
+    <div class="row" style="padding:10px;">
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4">
+            <div alert data-ng-repeat="notification in notifications" type="{{notification.type}}" close="closeNotification($index)">{{notification.msg}}</div>                                
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4"></div>
+        <div class="form-group col-xs-4">
+            <label for="login-username">Username</label>
+            <input type="text" class="form-control" id="login-username" data-ng-model="attemptedUsername">
+            <label for="login-password">Password</label>
+            <input type="text" class="form-control" id="login-password" data-ng-model="attemptedPassword">
+            <button class="btn btn-large btn-primary" data-ng-click="login(attemptedUsername, attemptedPassword)">Login</button>
+        </div>        
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4">
+            <h1>New User Registration</h1>
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col-xs-4"></div>
+        <div class="form-group col-xs-4">
+            <label for="register-username">New Username</label>
+            <input type="text" class="form-control" id="register-username" data-ng-model="newUser.username">
+            <label for="register-email">Email</label>
+            <input type="text" class="form-control" id="register-email" data-ng-model="newUser.email">
+            <label for="register-password">Password</label>
+            <input type="text" class="form-control" id="register-password" data-ng-model="newUser.password">
+            <label for="register-password-duplicate">Repeat Password</label>
+            <input type="text" class="form-control" id="register-password-duplicate" data-ng-model="newUser.passwordDuplicate">
+            <button class="btn btn-large btn-primary" data-ng-click="register()">Register</button>
+        </div>        
     </div>
 </div>

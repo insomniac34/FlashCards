@@ -54,7 +54,8 @@ function getConnection() {
 
     var attempts = 0;
     while(attempts != MAX_CONNECTIONS) {
-        if (connectionIterator === MAX_CONNECTIONS) {
+        console.log("connection iterator is " + connectionIterator.toString());
+        if (connectionIterator === MAX_CONNECTIONS-1) {
             connectionIterator = 0;
         }
 
@@ -73,8 +74,8 @@ function getConnection() {
 }
 
 function releaseConnection(connection) {
-    console.log("Releasing datasource " + connection.dataSourceId.toString());
-    connectionMutex[connection.dataSourceId] = false;
+    console.log("Releasing datasource " + (connection.dataSourceId-1).toString());
+    connectionMutex[connectionIterator-1] = false;
 }  
 
 /* 
@@ -88,17 +89,16 @@ SESSIONS TABLE
 | session_start   | date         | NO   |     | NULL    |                |
 +-----------------+--------------+------+-----+---------+----------------+
 */
-
 exports.purgeExpiredSessions = function() {
     var con = getConnection();
-    var getExpiredSessionsQuery = "SELECT `session_id` FROM `sessions` WHERE `sessions.expiration_date` < NOW() ORDER BY `session_id` DESC";
+    var getExpiredSessionsQuery = "SELECT * FROM `sessions` WHERE sessions.expiration_date < NOW() ORDER BY `session_id` DESC";
     con.query(getExpiredSessionsQuery, function(err, rows, fields) {
         if (err) {
             throw err;
         }
 
         rows.forEach(function(row) {
-            var deleteSessionQuery = "DELETE FROM `sessions` WHERE `sessions.session_id`=\'" + row.session_id + "\'";
+            var deleteSessionQuery = "DELETE FROM `sessions` WHERE sessions.session_id=\'" + row.session_id + "\'";
             con.query(deleteSessionQuery, function(_err, _rows, _fields) {
                 if (_err) {
                     throw _err;
@@ -116,7 +116,7 @@ exports.initializeSession = function(serverResponse, username, attemptedPassword
     var dbResults = [];
 
     // verify user credentials
-    var userVerificationQuery = "SELECT * FROM `users` WHERE `users.name`=\'" + username + "\'";
+    var userVerificationQuery = "SELECT * FROM `users` WHERE users.user_name=\'" + username + "\'";
     con.query(userVerificationQuery, function(err, rows, fields) {
         if (err) {
             throw err;
@@ -147,44 +147,65 @@ exports.initializeSession = function(serverResponse, username, attemptedPassword
         }
 
         // verify current session state:
-        var statusVerificationQuery = "SELECT * FROM `sessions` WHERE `session.user`=\'" + username + "\'";
-        con.query(statusVerificationQuery, function(err, rows, fields) {
-            if (err) {
-                throw err;
+        var statusVerificationQuery = "SELECT * FROM `sessions` WHERE sessions.user=\'" + username + "\'";
+        con.query(statusVerificationQuery, function(_err, _rows, _fields) {
+            if (_err) {
+                throw _err;
             }
 
             // if session already active, destroy active session and replace it with new one
-            if (rows.length !== 0) {
+            if (_rows.length !== 0) {
                 console.log("Destroying already-active user session...");
-                var destroySessionQuery = "DELETE FROM `sessions` WHERE `session.user`=\'"+username+"\'";
-                con.query(destroySessionQuery, function(err, rows, fields) {
-                    if (err) {
-                        throw err;
+                var destroySessionQuery = "DELETE FROM `sessions` WHERE sessions.user=\'"+username+"\'";
+                con.query(destroySessionQuery, function(__err, __rows, __fields) {
+                    if (__err) {
+                        throw __err;
                     }
 
                     // insert new session:
-                    var createSessionQuery = "INSERT INTO `sessions` VALUES (NULL, \'" + username + "\', DATE_ADD(NOW(), INTERVAL 1 DAY), NOW()";
-                    con.query(createSessionQuery, function(err, rows, fields) {
-                        if (err) {
-                            throw err;
+                    var createSessionQuery = "INSERT INTO `sessions` VALUES (NULL, \'" + username + "\', DATE_ADD(NOW(), INTERVAL 1 DAY), NOW())";
+                    con.query(createSessionQuery, function(___err, ___rows, ___fields) {
+                        if (___err) {
+                            throw ___err;
                         }
-                        serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
-                        console.log("WRITING: " + dbResults.toString());
-                        serverResponse.write(JSON.stringify({results: dbResults}));      
-                        serverResponse.end();  
+                        var sessionIdQuery = "SELECT * FROM `sessions` WHERE sessions.user=\'"+username+"\'";
+                        con.query(sessionIdQuery, function(____err, ____rows, ____fields) {
+                            console.log("ROWS IS " + JSON.stringify(____rows));
+                            dbResults.push(JSON.stringify({
+                                status: 'success',
+                                sessionId: ____rows[0].session_id
+                            }));   
+
+                            serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
+                            console.log("WRITING: " + dbResults.toString());
+                            serverResponse.write(JSON.stringify({results: dbResults}));      
+                            serverResponse.end();  
+                        }); 
                     });   
                 });
             }
             else {
-                var createSessionQuery = "INSERT INTO `sessions` VALUES (NULL, \'" + username + "\', DATE_ADD(NOW(), INTERVAL 1 DAY), NOW()";
-                con.query(createSessionQuery, function(err, rows, fields) {
-                    if (err) {
-                        throw err;
+                var createSessionQuery = "INSERT INTO `sessions` VALUES (NULL, \'" + username + "\', DATE_ADD(NOW(), INTERVAL 1 DAY), NOW())";
+                con.query(createSessionQuery, function(__err, __rows, __fields) {
+                    if (__err) {
+                        throw __err;
                     }
-                    serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
-                    console.log("WRITING: " + dbResults.toString());
-                    serverResponse.write(JSON.stringify({results: dbResults}));      
-                    serverResponse.end();  
+
+                    var sessionIdQuery = "SELECT * FROM `sessions` WHERE sessions.user=\'"+username+"\'";
+                    con.query(sessionIdQuery, function(___err, ___rows, ___fields) {
+                        console.log("ROWS IS " + JSON.stringify(___rows));
+                        dbResults.push(JSON.stringify({
+                            status: 'success',
+                            sessionId: ___rows[0].session_id
+                        }));   
+
+                        serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
+                        console.log("WRITING: " + dbResults.toString());
+                        serverResponse.write(JSON.stringify({results: dbResults}));      
+                        serverResponse.end();  
+                    });
+
+
                 });                
             }       
         });        
@@ -193,10 +214,10 @@ exports.initializeSession = function(serverResponse, username, attemptedPassword
     releaseConnection(con);    
 };
 
-exports.destroySession = function(username, sessionId, serverResponse) {
+exports.destroySession = function(serverResponse, username, sessionId) {
     var dbResults = [];
     var con = getConnection();
-    var sessionDestructionQuery = "DELETE FROM `sessions` WHERE `sessions.session_id`=\'" + sessionId + "\' AND `sessions.user`=\'" + username + "\'";
+    var sessionDestructionQuery = "DELETE FROM `sessions` WHERE sessions.session_id=\'" + sessionId + "\' AND sessions.user=\'" + username + "\'";
     con.query(sessionDestructionQuery, function(err, rows, fields) {
         if (err) {
             throw err;
@@ -215,6 +236,17 @@ exports.destroySession = function(username, sessionId, serverResponse) {
     releaseConnection(con);
 };
 
+/*
+FLASHCARDS TABLE
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| id        | int(11)      | NO   | PRI | NULL    | auto_increment |
+| user      | varchar(100) | YES  |     | NULL    |                |
+| questions | varchar(200) | YES  |     | NULL    |                |
+| answers   | varchar(200) | YES  |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
+*/
 exports.createFlashcards = function(newFlashcards, userId) {
     if (newFlashcards === null || newFlashcards === undefined || newFlashcards.length === 0) {
         console.log("no new flashcards to add to database: " + JSON.stringify(newFlashcards));
@@ -274,7 +306,7 @@ exports.retrieveAndTransmitFlashcards = function(serverResponse) {
     var con = getConnection();  
 
     var dbResults = [];
-    var getFlashCardsQuery = "SELECT * FROM `flashcards` ORDER BY `flashcards.id` DESC";
+    var getFlashCardsQuery = "SELECT * FROM `flashcards` ORDER BY flashcards.id DESC";
     con.query(getFlashCardsQuery, function(err, rows, fields) {
         if (err) {
             throw err;
@@ -308,7 +340,7 @@ USERS TABLE
 exports.registerNewUser = function(serverResponse, attemptedUsername, newPassword, newEmail) {
     var dbResults = [];
     var con = getConnection();
-    var userExistenceQuery = "SELECT * FROM `users` WHERE `user.name`=\'" + attemptedUsername + "\'";
+    var userExistenceQuery = "SELECT * FROM `users` WHERE users.user_name=\'" + attemptedUsername + "\'";
     con.query(userExistenceQuery, function(err, rows, fields) {
         if (rows.length > 0) {
 
@@ -324,10 +356,11 @@ exports.registerNewUser = function(serverResponse, attemptedUsername, newPasswor
             return;              
         }
         else {
-            var userCreationQuery = "INSERT INTO `users` VALUES (NULL, \'" + attemptedUsername + "\', \'" + newPassword + "\', \'" + newEmail + "\')";
-            con.query(userCreationQuery, function(err, rows, fields) {
-                if (err) {
-                    throw err;
+            var encryptedPassword = crypto.createHash('sha256').update(newPassword).digest('hex');
+            var userCreationQuery = "INSERT INTO `users` VALUES (NULL, \'" + attemptedUsername + "\', \'" + encryptedPassword + "\', \'" + newEmail + "\')";
+            con.query(userCreationQuery, function(_err, _rows, _fields) {
+                if (_err) {
+                    throw _err;
                 }
 
                 dbResults.push(JSON.stringify({
@@ -344,4 +377,28 @@ exports.registerNewUser = function(serverResponse, attemptedUsername, newPasswor
     });
 
     releaseConnection(con);
+};
+
+exports.verifySession = function(serverResponse, username, sessionId) {
+    var dbResults = [];
+
+    var con = getConnection();
+    var verifyUserSessionQuery = "SELECT * FROM `sessions` WHERE sessions.session_id=\'"+sessionId+"\' AND sessions.user=\'"+username+"\'";
+    con.query(verifyUserSessionQuery, function(err, rows, fields) {
+        if (rows !== undefined) {
+            dbResults.push(JSON.stringify({
+                status: 'verified'
+            }));
+        }
+        else {
+            dbResults.push(JSON.stringify({
+                status: 'failure'
+            }));            
+        }
+        serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
+        console.log("WRITING: " + dbResults.toString());
+        serverResponse.write(JSON.stringify({results: dbResults}));      
+        serverResponse.end();     
+    });
+    releaseConnection(con); 
 };
