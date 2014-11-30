@@ -34,6 +34,9 @@ angular.module('FlashCards')
             }
         });        
     }
+    else {
+        $state.go('login');
+    }       
 
     $scope.login = function(attemptedUsername, attemptedPassword) {
         if (angular.equals(attemptedUsername, "") || angular.equals(attemptedPassword, "")) {

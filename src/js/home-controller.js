@@ -14,6 +14,9 @@ angular.module('FlashCards')
                 $state.go('login');
             }
         });        
+    }
+    else {
+        $state.go('login');
     }    
 
     $scope.logout = function() {

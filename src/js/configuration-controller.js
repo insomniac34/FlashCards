@@ -9,7 +9,7 @@
 
 angular.module('FlashCards')
 
-.controller('ConfigurationController', ['$log', '$scope', '$http', 'FlashCardsDataService', function ConfigurationController($log, $scope, $http, FlashCardsDataService) {
+.controller('ConfigurationController', ['$state', 'localStorageService', '$log', '$scope', '$http', 'FlashCardsUserService', 'FlashCardsDataService', function ConfigurationController($state, localStorageService, $log, $scope, $http, FlashCardsUserService, FlashCardsDataService) {
     $scope.pageTitle = "FlashCards Configuration Tool";    
     $scope.notifications = [];
     $scope.newFlashCards = [];
@@ -23,7 +23,22 @@ angular.module('FlashCards')
     $scope.flashCardOptions = [];
     $scope.deletedFlashCards = [];
 
-    /* retrieve up-to-date data from server */
+    $log.info("localstorage is " + JSON.stringify(localStorageService.get('session')));
+    if (localStorageService.get('session') !== null) {
+        var sessionData = localStorageService.get('session');
+        FlashCardsUserService.verifyUserSession(sessionData).then(function(response) {
+            $log.info("Response is: " + JSON.stringify(response));
+            if (!angular.equals(JSON.parse(response[0]).status, "verified")) {
+                var result = localStorageService.remove('session');
+                $state.go('login');
+            }
+        });        
+    }    
+    else {
+        $state.go('login');
+    }   
+    
+    // retrieve up-to-date data from server 
     FlashCardsDataService.getFlashCardData().then(function(results) {
         $log.info("data received: " + JSON.stringify(results));
         if (results === undefined || results === null) {
