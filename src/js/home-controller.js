@@ -23,7 +23,8 @@ angular.module('FlashCards')
         
         var userData = {
             username: angular.copy(localStorageService.get('session').username),
-            sessionId: angular.copy(localStorageService.get('session').sessionId)
+            sessionId: angular.copy(localStorageService.get('session').sessionId),
+            authenticationToken: angular.copy(localStorageService.get('session').authenticationToken)
         };
 
         // step 1: delete session from server

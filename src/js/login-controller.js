@@ -47,7 +47,8 @@ angular.module('FlashCards')
 
                 var sessionData = {
                     username: $scope.attemptedUsername,
-                    sessionId: JSON.parse(response[0]).sessionId
+                    sessionId: JSON.parse(response[0]).sessionId,
+                    authenticationToken: JSON.parse(response[0]).authenticationToken
                 };
 
                 $log.info("setting session in ls to " + JSON.stringify(sessionData));

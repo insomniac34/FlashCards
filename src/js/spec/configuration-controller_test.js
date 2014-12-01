@@ -144,7 +144,8 @@ describe("flashcards configuration tool", function() {
         var sessionId = 10;
         var sessionData = {
             username: scope.username,
-            sessionId: sessionId
+            sessionId: sessionId,
+            authenticationToken: '1234567890'
         };
         localStorageService.set('session', JSON.stringify(sessionData));
         
@@ -171,7 +172,7 @@ describe("flashcards configuration tool", function() {
             done();
         };
 
-        $httpBackend.expectPOST('server.js', {"data":{"username":"johndoe123","sessionId":10},"action":"verifySession"}, {"Accept":"application/json, text/plain, */*","X-Requested-With":"XMLHttpRequest","Content-Type":"application/x-www-form-urlencoded;charset=utf-8"}).respond(200, {results: [JSON.stringify(mockSessionResponse)]});
+        $httpBackend.expectPOST('server.js', {"data":{"username":"johndoe123","sessionId":10, "authenticationToken":"1234567890"},"action":"verifySession"}, {"Accept":"application/json, text/plain, */*","X-Requested-With":"XMLHttpRequest","Content-Type":"application/x-www-form-urlencoded;charset=utf-8"}).respond(200, {results: [JSON.stringify(mockSessionResponse)]});
         $httpBackend.expectGET('templates/login-tpl.html').respond(401, '');
         FlashCardsUserService.verifyUserSession(sessionData).then(testResponse).catch(failureTest).finally(done);
         $httpBackend.flush();

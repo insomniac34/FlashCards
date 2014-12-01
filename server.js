@@ -74,7 +74,8 @@ require('http').createServer(function (request, response) {
                                 orm.verifySession(
                                     response,
                                     jsonPayload.data.username,
-                                    jsonPayload.data.sessionId
+                                    jsonPayload.data.sessionId,
+                                    jsonPayload.data.authenticationToken
                                 );
                                 
                                 break;
@@ -83,7 +84,8 @@ require('http').createServer(function (request, response) {
                                 orm.destroySession(
                                     response,
                                     jsonPayload.data.username,
-                                    jsonPayload.data.sessionId
+                                    jsonPayload.data.sessionId,
+                                    jsonPayload.data.authenticationToken
                                 );
 
                                 break;
