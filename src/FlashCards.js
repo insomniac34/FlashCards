@@ -1,5 +1,5 @@
 // core components:
-angular.module("FlashCards", ['ngCookies', 'ngAnimate', 'ui.router', 'ui.bootstrap', 'LocalStorageModule'])
+angular.module("FlashCards", ['ngRoute', 'ngCookies', 'ngAnimate', 'ui.router', 'ui.bootstrap', 'LocalStorageModule'])
 
 .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 $urlRouterProvider.otherwise("login");
