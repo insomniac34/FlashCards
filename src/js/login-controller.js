@@ -10,26 +10,13 @@ angular.module('FlashCards')
     $scope.newUser = {};
 
     // if user session is already active, go to home page
-
-    /*
-    $log.info("cookie is " + $cookieStore.get("session"));
-    if ($cookieStore.get("session") !== undefined) {
-        var sessionData = $cookieStore.get("session");
-        FlashCardsUserService.verifyUserSession(sessionData).then(function(response) {
-            if (angular.equals(JSON.parse(response[0]).status, "verified")) {
-                $log.info("User session is now active with username " + $cookieStore.get("session"));
-                $state.go('home');
-            }
-        });
-    }
-    */
     $log.info("localstorage is " + JSON.stringify(localStorageService.get('session')));
     if (localStorageService.get('session') !== null) {
         var sessionData = localStorageService.get('session');
         FlashCardsUserService.verifyUserSession(sessionData).then(function(response) {
             $log.info("Response is: " + JSON.stringify(response));
             if (angular.equals(JSON.parse(response[0]).status, "verified")) {
-                $log.info("User session is now active with username " + localStorageService.get("session"));
+                $log.info("User session is now active with username " + localStorageService.get("session").username);
                 $state.go('home');
             }
         });        
@@ -63,11 +50,6 @@ angular.module('FlashCards')
                     sessionId: JSON.parse(response[0]).sessionId
                 };
 
-
-                /*
-                $cookieStore.put("session", sessionData);
-                $log.info("User session is now active with username " + $cookieStore.get("session").username);
-                */
                 $log.info("setting session in ls to " + JSON.stringify(sessionData));
                 localStorageService.set('session', sessionData);
                 $state.go('home');
