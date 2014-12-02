@@ -67,8 +67,9 @@ FlashCards, the comically unoriginal and generic name with which I have coined t
 	As previously mentioned, the quality of the application in the areas that are nearing completion/completed, such as the RESTful API and token authentication system, is extremely high. This is a result of me approaching the project from a professional standpoint (as in code quality, not speed) due to this also being a personal project of mine. Of course, in no way is this product ready for a release, however it is extremely close to Demo status. The biggest barrier in this regard, as previously mentioned, is HTML/CSS and simple AngularJS modules which are primarily replicas of already-existing functionality.
 
 **WHERE CODE IS LOCATED**
-FLASHCARDS -> main directory (for simplicity, both front and back-end code have been included in this directory)
-	
+
+- FLASHCARDS -> main directory (for simplicity, both front and back-end code have been included in this directory)
+
 	- verification-sql/ -> DIRECTORY containing all database test components
 	- spec/ -> DIRECTORY containing the backend Jasmine unit tests
 	- src/ -> contains front-end JavaScript, HTML and CSS code
@@ -81,12 +82,13 @@ FLASHCARDS -> main directory (for simplicity, both front and back-end code have 
 
 	
 **REQUIRED SOFTWARE:**
-	AN INTERNET CONNECTION 
-	NodeJS with node-static, jasmine-node and mysql libraries installed via the NPM package manager
-	Python 2.0 for execution of database scripts
-	a Bash Shell for execution of the database test driver
-	MySQL Database 
-	ONLY TESTED ON Ubuntu Linux 14.04
+
+	- AN INTERNET CONNECTION 
+	- NodeJS with node-static, jasmine-node and mysql libraries installed via the NPM package manager
+	- Python 2.0 for execution of database scripts
+	- a Bash Shell for execution of the database test driver
+	- MySQL Database 
+	- ONLY TESTED ON Ubuntu Linux 14.04
 
 **INSTALLATION AND USE INSTRUCTIONS:**
 	After installation of the above required software, the first step is to execute init.sql from within MYSQL. THEN, start the backend server with the command
