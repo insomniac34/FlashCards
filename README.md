@@ -1,18 +1,18 @@
-FlashCards
+FlashCards - CS 1699 - FINAL DELIVERABLE
 ==========
-
+By Tyler Raborn
 A Flashcard Webapp
 
 
 
-MOTIVATION & INTRODUCTION:
+**MOTIVATION & INTRODUCTION:**
 For this project, I chose to actually write the application to be tested from scratch. A longtime goal of mine has been to create a flashcards webapp which would allow for extreme customization in the types of flashcards/quizzing which is possible. Examples of such specialty cases include flashcards for the conjugations of verbs in various tenses in Spanish, translation based flashcards using the Google Translate API, and mathematical questions using the Wolfram API. 
 
 Obviously such a webapp in a professional sense is quite the undertaking for an individual, so I started early, almost a month in advance. From a functionality perspective, the webapp is still in its extreme infancy; the actual interactive testing functionality of the application is barely even started.
 
 The majority of development time for the application as it currently sits has gone towards the application's infrastructure, of which a large portion was written utilizing Behavior-Driven Development. The components which are farthest along in their development cycle include the backend's Object-Relational Mapping database interface, the front-end's FlashCards Configuration Tool for the creation of a user's flashcards, webapp's CSRF-protected user authentication system, and the front-end's RESTful AJAX services for communicating with the server.
 
-APPLICATION ARCHITECTURE:
+**APPLICATION ARCHITECTURE:**
 FlashCards, the comically unoriginal and generic name with which I have coined the application in its current state of infancy, is composed of three main components written in different languages/frameworks.
 
 1.) Application Frontend: The frontend is written entirely in Google's AngularJS JavaScript library, utilizing the Jasmine testing framework supplemented by several libraries meant to enhance Jasmine's testing capabilities for usage with AngularJS, such as angular-mocks (https://docs.angularjs.org/api/ngMock/object/angular.mock).
@@ -21,21 +21,21 @@ FlashCards, the comically unoriginal and generic name with which I have coined t
 
 3.) Database: The application's database of choice is MySQL due to its simplicity, ubiquitousness and familiarity. The schema as it currently exists is very simple and is geared towards easy interoperability with the code over performance, however this is eventually going to change. Database testing is in its infancy, and currently exists as a bash script from which the test suite's components are called. Python scripts are used to populate the database with dummy data, to verify the contents of the database, and to destroy the dummy data once the tests have completed. In between the Python scripts, NodeJS scripts are called which contain the actual function calls which are the subject of the tests. 
 
-THE TESTS:
+**THE TESTS:**
 
-	Front-End:
+	**Front-End:**
 		On the front-end, the test suite features several areas of high coverage. At the moment, the API for communication with the server consists of a collection of AngularJS Services, which are compact and reusable collections of functions which are available to all components of the frontend. These encompass 100% of AJAX requests made between the application front and back-end. All Services feature 100% test coverage. AngularJS utilizes JavaScript Promises behind the scenes in its $http service, the exclusive mechanism utilized for sending XHR requests to the server. Like the NodeJS i/o operations on the backend, Angular's implementation of the Promise is an asynchronous method of performing external data requests. As such, Jasmine unit tests which treat promise-based functions as regular functions DO NOT WORK. This was a source of extreme difficulty in this project, however I have learned a massive amount about how Promises and async operations work. The unit tests for the Angular Services feature the usage of several advanced Jasmine features, primarily the $httpBackend mock backend service object and Jasmine 2.0's Promise testing features, such as the done() method for forcing a Controller to recompile and resolve all promises in order to update the model within the scope of the unit tests. Tests on the user verification aspect of the FlashCardsUserService is critical in verifying the security of the application.
 		In addition to the Angular service tests, unit tests for the functionality of the FlashCards Configuration Tool, Login page, and the early version of the FlashCards page provide coverage for the majority of user functionalities on these pages. 
 	
-	Back-End: 
+	**Back-End:** 
 		The back-end's unit tests utilize the jasmine-node NodeJS module (https://github.com/mhevery/jasmine-node), which uses vanilla Jasmine syntax for its unit tests. These tests are executed from, and output their results to, the command line. The only backend component which features code coverage is ORM.js, however this is actually the majority of the backend's code - Server.js is the only other signficant script, and unfortunately testing it with vanilla Jasmine provided all but impossible, however this will be an excellent future opportunity to learn about the functionality of addons to jasmine-node.
 	
-	Database:
+	**Database:**
 		The database unit tests revolve primarily around the calling of ORM.js functions after Python scripts have loaded dummy data into the database. Another Python script then samples the values in the database, compares them to the hardcoded expected values, and prints the results of these comparisons to the command line. At the moment, only one database test has been written due to last-minute time restraints.
 
 
 
-What problems did you encounter in testing?
+**What problems did you encounter in testing?**
 	As I was writing the application simultaneously with the tests, there were plenty of development problems. Specifically in the testing realm, difficulties were experienced in learning the internal mechanisms of the Promise construct in AngularJS. Having to write unit tests using this complicated aspect was very challenging, as it required understanding the process by which a Promise is "resolved", i.e. the steps that Angular takes to asynchronously receive data from the target datasource, prepare it for use, and finally integrate it into the scope of the Angular Controller. Eventually, this was overcome and as such extremely useful tests of the RESTful front-end services were born.
 	Another related problem was on the back-end. The asynchronous nature of NodeJS operations consumed a TON of my time, as I tried to figure out a way to test the contents of the database solely with Node. In the end, it was decided that a series of small simple Python scripts to force the database into a particular state prior to execution of target Node functions was the best method.
 	It was also difficult to learn how to use Jasmine's SpyOn() method; but this proved invaluable once I figured it out, as it allows for the monitoring of which functions are called during execution of the unit test, and for a replacement/supplemental method to be called to mock the original's functionality.
