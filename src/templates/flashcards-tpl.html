@@ -1,11 +1,20 @@
 
 <center>
     <h1>{{pageTitle}}</h1>
-    <li>
-        <a ui-sref="configuration">Configuration</a>
-    </li>
-    <li>
-        <a ui-sref="flashcards">Begin</a>  
-    </li>
-    <div ui-view></div>
+    <div class="row">
+        <div class="col-md-1"> </div>
+        <div class="col-md-2"> </div>
+        <div class="col-md-4">
+            <button>
+                <a ui-sref="configuration">Configuration</a>
+            </button>
+            <button>
+                <a ui-sref="flashcards">Begin</a>  
+            </button>    
+            <button>
+                <a ui-sref="home">Home</a>  
+            </button>    
+            <button data-ng-click="logout()">Logout</button>    
+        </div>        
+    </div>    
 </center>
