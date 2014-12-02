@@ -43,20 +43,43 @@ FLASHCARDS TABLE
 | answers   | varchar(200) | YES  |     | NULL    |                |
 +-----------+--------------+------+-----+---------+----------------+
 '''
+def assertEqual(val1, val2):
+    if val1 == val2:
+        print('SUCCESS!')
+    else:
+        print("FAILURE! " + " expected " + str(val1) + " to be " + str(val2))
 
 def main():    
 
     con = mysql.connector.connect(host="localhost", user="root", passwd="password", db="test")
     cursor = con.cursor()
 
-    getSessionsQuery = ("SELECT * FROM `flashcards`")
+    getSessionsQuery = ("SELECT * FROM `flashcards` WHERE flashcards.user=\'test\'")
     cursor.execute(getSessionsQuery)
 
     #for row in cursor.fetchall():
     #    print(row)
 
-    for (id, user, questions, answers) in cursor:
-      print(" " + str(id) + " " + user + " " + questions + " " + answers)
+    # 18 test Why? Because
+    # 19 test What are the best kind of cats? dead ones
+    # 20 test another question another answer
+
+    idx = 0
+    for (theId, user, questions, answers) in cursor:
+        print(" " + str(theId) + " " + user + " " + questions + " " + answers)
+        if idx==0:
+            assertEqual(user, 'test')
+            assertEqual(questions, 'Why?')
+            assertEqual(answers, 'Because')
+        elif idx==1:
+            assertEqual(user, 'test')
+            assertEqual(questions, 'What are the best kind of cats?')
+            assertEqual(answers, 'dead ones')            
+        else:
+            assertEqual(user, 'test')
+            assertEqual(questions, 'another question')
+            assertEqual(answers, 'another answer')                
+        idx+=1
 
     con.commit();
 
