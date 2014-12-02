@@ -323,11 +323,11 @@ exports.createFlashcards = function(serverResponse, newFlashcards, username, aut
             var questions = "";
             var answers = "";
             flashcard.questionAnswerPairings.forEach(function(questionAnswerPairing) {
-                questions+=questionAnswerPairing.question+"\n";
-                answers+=questionAnswerPairing.answer+"\n";
+                questions+=questionAnswerPairing.question+"";
+                answers+=questionAnswerPairing.answer+"";
             });
 
-            var insertionQuery = "INSERT INTO `flashcards` VALUES (NULL, 'ty', \'" + questions + "\', \'" + answers + "\')";
+            var insertionQuery = "INSERT INTO `flashcards` VALUES (NULL, \'" + username + "\', \'" + questions + "\', \'" + answers + "\')";
             console.log("INSERTION QUERY IS: " + insertionQuery);
             con.query(insertionQuery, function(_err, _rows, _fields) {
                 if (_err) {
@@ -357,6 +357,7 @@ exports.deleteFlashcards = function(serverResponse, targetFlashcards, username, 
     var dbResults = [];
     var con = getConnection();
     var sessionAuthenticationQuery = "SELECT * FROM `sessions` WHERE sessions.token=\'" + JSON.stringify(authenticationToken) + "\' AND sessions.user=\'" + username + "\'";
+    console.log("deleteFlashcards(): authentication query is " + sessionAuthenticationQuery);
     con.query(sessionAuthenticationQuery, function(err, rows, fields) {
         if (err) {
             throw err;
@@ -375,15 +376,16 @@ exports.deleteFlashcards = function(serverResponse, targetFlashcards, username, 
         }
 
         // remove deleted flashcards from database
-        targetFlashcards.forEach(function(flashCard) {
+        targetFlashcards.forEach(function(flashcard) {
             var questions = "";
             var answers = "";
             flashcard.questionAnswerPairings.forEach(function(questionAnswerPairing) {
-                questions+=questionAnswerPairing.question+"\n";
-                answers+=questionAnswerPairing.answer+"\n";
+                questions+=questionAnswerPairing.question+"";
+                answers+=questionAnswerPairing.answer+"";
             });
 
-            var removalQuery = "DELETE FROM `flashcards` WHERE `questions`=\'"+questions+"\' AND `answers`=\'"+answers+"\'";
+            var removalQuery = "DELETE FROM `flashcards` WHERE questions=\'" + questions + "\' AND answers=\'" + answers + "\' AND user=\'" + username + "\'";
+            console.log("removal query is: " + removalQuery);
             con.query(removalQuery, function(_err, _rows, _fields) {
                 if (_err) {
                     throw _err;

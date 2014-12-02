@@ -54,7 +54,7 @@ angular.module('FlashCards')
                             answer: resultObj.answers
                         }]));
 
-                        /* since these come from the server, they are, by definition, saved */
+                        // since these come from the server, they are, by definition, saved 
                         $scope.newFlashCards[$scope.newFlashCards.length-1].saved = true;
                     });
                 }
@@ -221,6 +221,13 @@ angular.module('FlashCards')
             $log.info("RESPONSE IS: " + JSON.stringify(response));
             if (angular.equals(JSON.parse(response[0]).status, 'success')) {
                 $scope.notifications.push({msg: 'Flashcard data has been saved!', type: 'success'});
+
+                // change color to green to reflect that they have just been saved
+                angular.forEach($scope.newFlashCards, function(flashcard) {
+                    if (!flashcard.saved) {
+                        flashcard.saved = true;
+                    }
+                });
             }
             else {
                 localStorageService.remove('session');
