@@ -41,33 +41,32 @@ FlashCards, the comically unoriginal and generic name with which I have coined t
 	Another related problem was on the back-end. The asynchronous nature of NodeJS operations consumed a TON of my time, as I tried to figure out a way to test the contents of the database solely with Node. In the end, it was decided that a series of small simple Python scripts to force the database into a particular state prior to execution of target Node functions was the best method.
 	It was also difficult to learn how to use Jasmine's SpyOn() method; but this proved invaluable once I figured it out, as it allows for the monitoring of which functions are called during execution of the unit test, and for a replacement/supplemental method to be called to mock the original's functionality.
 
-What other kinds of tests or tests themselves would be useful in assessing the quality of the project?
+**What other kinds of tests or tests themselves would be useful in assessing the quality of the project?**
 	Firstly, only one database test is currently functioning, and as such significantly more of this type of test should be the first priority, to ensure the database behaves as expected in a variety of scenarios. Secondly, UX testing would be extremely useful to get an idea of which elements of the webapp's GUI are easily usable and which could use improvement.
 
-What is your assessment of the quality of the product, based on your testing?
+**What is your assessment of the quality of the product, based on your testing?**
 	It is far from complete, as previously mentioned, however some of the more difficult components of a webapp, such as token-based authentication and an efficiently organized front-end codebase, have been achieved, and as such I believe that the framework for a well-written piece of software has been laid down. Work definitely needs to be put towards the front end to even allow this product to reach demonstration status, although this would only require some HTML/CSS and mostly repetition of code which has already been developed.
 	Ironically, the biggest casualty in the rush to submission of the project was the FlashCards page itself; all of the necessary infrastructure is there, but the simple page itself is not yet operational; the proximity of this page to functioning demo status speaks to the closness with which it is to working. Just a small amount of time would be needed to convert it to a degree of simplistic but functioning operation.
 
-A list of any failed tests or problem areas
+**A list of any failed tests or problem areas**
 	All tests succeed as written at this point in time. Difficulties in the development phase are highlighted in above sections.
 
-A red/yellow/green-template of the different areas of the system (e.g., Database - Red, Front End - Green, etc.) with justifications
+**A red/yellow/green-template of the different areas of the system (e.g., Database - Red, Front End - Green, etc.) with justifications**
 	
-	Front-End: RED
+	**Front-End: RED**
 	The functionality of the front-end application, as a flashcards webapp, is simply not ready for release; the primary page responsible for the application's main functionality is simply not complete, as the more advanced configuration tool took up a lot of the front-end GUI development time.
 	
-	Back-End: YELLOW
+	**Back-End: YELLOW**
 	While more testing, especially for security holes, needs to be performed, the pure functionality of the backend is such that a functioning product demo could easily be produced without applying any changes to the backend code base. Assuming a completed front-end from a design and basic usability perspective, the backend in its current state is capable of supporting a functioning demo FlashCards application.
 	
-	Database: YELLOW
+	**Database: YELLOW**
 	This could be considered GREEN if for a school project, however from a professional standpoint there are numerous optimizations which could be performed on the schema of the database. As with the main back-end codebase, the database could benefit from more tests (Verification SQL), however in its current state the database is such that a functioning demo application could be produced without altering the schema/test code.
 
 
-Your recommendation on whether or not the product is ready to be released
+**Your recommendation on whether or not the product is ready to be released**
 	As previously mentioned, the quality of the application in the areas that are nearing completion/completed, such as the RESTful API and token authentication system, is extremely high. This is a result of me approaching the project from a professional standpoint (as in code quality, not speed) due to this also being a personal project of mine. Of course, in no way is this product ready for a release, however it is extremely close to Demo status. The biggest barrier in this regard, as previously mentioned, is HTML/CSS and simple AngularJS modules which are primarily replicas of already-existing functionality.
 
-WHERE CODE IS LOCATED
-Organization:
+**WHERE CODE IS LOCATED**
 FLASHCARDS -> main directory (for simplicity, both front and back-end code have been included in this directory)
 	verification-sql/ -> DIRECTORY containing all database test components
 	spec/ -> DIRECTORY containing the backend Jasmine unit tests
@@ -80,7 +79,7 @@ FLASHCARDS -> main directory (for simplicity, both front and back-end code have 
 		
 
 	
-REQUIRED SOFTWARE:
+**REQUIRED SOFTWARE:**
 	AN INTERNET CONNECTION 
 	NodeJS with node-static, jasmine-node and mysql libraries installed via the NPM package manager
 	Python 2.0 for execution of database scripts
@@ -88,11 +87,11 @@ REQUIRED SOFTWARE:
 	MySQL Database 
 	ONLY TESTED ON Ubuntu Linux 14.04
 
-INSTALLATION AND USE INSTRUCTIONS:
+**INSTALLATION AND USE INSTRUCTIONS:**
 	After installation of the above required software, the first step is to execute init.sql from within MYSQL. THEN, start the backend server with the command
 	'node server.js'. 
 
-	APPLICATION:
+	**APPLICATION:**
 		Simply navigate to localhost:8080/src/#, and the AngularJS RouteProvider will take over and allow you to use the webapp. The Configuration page
 		is the only completed page in the app unfortunately. Everything else is a WIP.
 	
@@ -103,11 +102,15 @@ INSTALLATION AND USE INSTRUCTIONS:
 	DATABASE TESTS:
 		execute './driver.sh' from within the verification-sql/ directory
 	
-SCREENSHOTS
+**SCREENSHOTS**
 
-
+**Jasmine Front-End Test Results**
 ![Jasmine Front-End Test Results](http://i.imgur.com/FAC15JL.png)
+
+**Jasmine Back-End Test Results**
 ![Jasmine Back-End Test Results](http://i.imgur.com/NuEwcEX.png)
+
+**Verification SQL Results**
 ![Verification SQL Results](http://i.imgur.com/mpmbqkK.png)
 
 
