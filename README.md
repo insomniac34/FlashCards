@@ -50,14 +50,15 @@ A list of any failed tests or problem areas
 	All tests succeed as written at this point in time. Difficulties in the development phase are highlighted in above sections.
 
 A red/yellow/green-template of the different areas of the system (e.g., Database - Red, Front End - Green, etc.) with justifications
+	
 	Front-End: RED
-		* The functionality of the front-end application, as a flashcards webapp, is simply not ready for release; the primary page responsible for the application's main functionality is simply not complete, as the more advanced configuration tool took up a lot of the front-end GUI development time.
-
+	The functionality of the front-end application, as a flashcards webapp, is simply not ready for release; the primary page responsible for the application's main functionality is simply not complete, as the more advanced configuration tool took up a lot of the front-end GUI development time.
+	
 	Back-End: YELLOW
-		* While more testing, especially for security holes, needs to be performed, the pure functionality of the backend is such that a functioning product demo could easily be produced without applying any changes to the backend code base. Assuming a completed front-end from a design and basic usability perspective, the backend in its current state is capable of supporting a functioning demo FlashCards application.
-
+	While more testing, especially for security holes, needs to be performed, the pure functionality of the backend is such that a functioning product demo could easily be produced without applying any changes to the backend code base. Assuming a completed front-end from a design and basic usability perspective, the backend in its current state is capable of supporting a functioning demo FlashCards application.
+	
 	Database: YELLOW
-		* This could be considered GREEN if for a school project, however from a professional standpoint there are numerous optimizations which could be performed on the schema of the database. As with the main back-end codebase, the database could benefit from more tests (Verification SQL), however in its current state the database is such that a functioning demo application could be produced without altering the schema/test code.
+	This could be considered GREEN if for a school project, however from a professional standpoint there are numerous optimizations which could be performed on the schema of the database. As with the main back-end codebase, the database could benefit from more tests (Verification SQL), however in its current state the database is such that a functioning demo application could be produced without altering the schema/test code.
 
 
 Your recommendation on whether or not the product is ready to be released
