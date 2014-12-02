@@ -37,8 +37,15 @@ angular.module('FlashCards')
             // retrieve up-to-date data from server
             $log.info("writing session data: " + JSON.stringify(sessionData)); 
             FlashCardsDataService.getFlashCardData(sessionData).then(function(results) {
-                $log.info("result received: " + JSON.stringify(results[0]));
-                if (JSON.parse(results[0]).status !== undefined) {
+                $log.info("result received: " + JSON.stringify(results));
+                if (results.length === 0) {
+                    $scope.notifications.push({
+                        msg: 'We were unable to find any flashcards. Create some and start building your collection!',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                else if (JSON.parse(results[0]).status !== undefined) {
                     //this means a message is being transmitted from the server; the only possible message for this situation is an authentication failure.
                     var result = localStorageService.remove('session');
                     $state.go('login');
