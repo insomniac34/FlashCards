@@ -153,6 +153,7 @@ describe("flashcards configuration tool", function() {
             sessionId: sessionId,
             authenticationToken: '1234567890'
         };
+        
         localStorageService.set('session', JSON.stringify(sessionData));
 
         // tests to be evaluated on the promise's response

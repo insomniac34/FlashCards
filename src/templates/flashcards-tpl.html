@@ -1,7 +1,36 @@
 
 <center>
     <h1>{{pageTitle}}</h1>
+
     <div class="row">
+        <div class="col-xs-2"></div>
+        <div class="col-xs-3"> </div>   
+        <div class="col-xs-4" style="padding:10px;">
+            <div alert data-ng-repeat="notification in notifications" type="{{notification.type}}" close="closeNotification($index)">{{notification.msg}}</div>                    
+        </div>            
+    </div>
+
+    <div class="row">
+        
+        <div class="col-md-2"></div>
+        <div class="col-md-1">
+            <button class="btn btn-lg glyphicon glyphicon-chevron-left"></button>       
+        </div> 
+
+        <div class="col-md-4">
+            Question: 
+            <div data-ng-repeat="pairing in currentFlashcard.questionAnswerPairings">
+                {{pairing.question}}
+            </div>
+        </div>
+
+    <div class="col-md-1">
+            <button class="btn btn-lg glyphicon glyphicon-chevron-right" data-ng-click="nextFlashcard()"></button>
+        </div>                
+    </div>
+
+    <div class="row">
+
         <div class="col-md-1"> </div>
         <div class="col-md-2"> </div>
         <div class="col-md-4">

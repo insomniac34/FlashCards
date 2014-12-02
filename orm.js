@@ -1,5 +1,5 @@
 /* 
-    An Interface for the Flashcards Object-Relational Schema
+    Object-Relational Mapping (ORM) for the Flashcards Application Backend
         Written by Tyler Raborn
 */
 
@@ -15,12 +15,12 @@ Date.prototype.addHours = function(h) {
 var initialRun = true;
 var MAX_CONNECTIONS = 10;
 
-var connectionPool = [];
-var connectionMutex = [];
+exports.connectionPool = [];
+exports.connectionMutex = [];
 var availableConnections = [];
 var closedConnections = [];
 
-function initializeConnectionPool(maxConnections) {
+exports.initializeConnectionPool = function(maxConnections) {
     console.log("Initializing connection pool with " + maxConnections.toString() + " connections");
     for (var i = 0; i < maxConnections; i++) {
         connectionPool.push(mysql.createConnection({
@@ -39,14 +39,15 @@ function initializeConnectionPool(maxConnections) {
     });
 }
 
-function destroyConnectionPool() {
+exports.destroyConnectionPool = function() {
     connectionPool.forEach(function(connection) {
         connection.end();
     });
+    connectionPool.length = 0;
 }
 
 var connectionIterator = 0;
-function getConnection() {
+exports.getConnection = function() {
     if (initialRun) {
         initializeConnectionPool(MAX_CONNECTIONS);
         initialRun = false;
@@ -73,10 +74,18 @@ function getConnection() {
     return null;    
 }
 
-function releaseConnection(connection) {
+exports.releaseConnection = function(connection) {
     console.log("Releasing datasource " + (connection.dataSourceId-1).toString());
     connectionMutex[connectionIterator-1] = false;
 }  
+
+//aliases for internal usage convenience
+var getConnection = exports.getConnection;
+var releaseConnection = exports.releaseConnection;
+var initializeConnectionPool = exports.initializeConnectionPool;
+var destroyConnectionPool = exports.destroyConnectionPool;
+var connectionPool = exports.connectionPool;
+var connectionMutex = exports.connectionMutex;
 
 /* 
 SESSIONS TABLE
@@ -301,6 +310,7 @@ exports.createFlashcards = function(serverResponse, newFlashcards, username, aut
     var dbResults = [];
     var con = getConnection();
     var sessionAuthenticationQuery = "SELECT * FROM `sessions` WHERE sessions.token=\'" + JSON.stringify(authenticationToken) + "\' AND sessions.user=\'" + username + "\'";
+    console.log("createFlashcards(): sessionAuthenticationQuery is: " + sessionAuthenticationQuery);
     con.query(sessionAuthenticationQuery, function(err, rows, fields) {
         if (err) {
             throw err;
@@ -340,7 +350,7 @@ exports.createFlashcards = function(serverResponse, newFlashcards, username, aut
             status: 'success'
         }));          
         serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
-        console.log("WRITING: " + dbResults.toString());
+        console.log("CREATEFLASHCARDS: WRITING: " + dbResults.toString());
         serverResponse.write(JSON.stringify({results: dbResults}));      
         serverResponse.end();               
     });

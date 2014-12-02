@@ -11,7 +11,7 @@ angular.module('FlashCards')
 
     // if user session is already active, go to home page
     $log.info("localstorage is " + JSON.stringify(localStorageService.get('session')));
-    if (localStorageService.get('session') !== null) {
+    if (localStorageService.get('session') !== undefined && localStorageService.get('session') !== null) {
         var sessionData = localStorageService.get('session');
         FlashCardsUserService.verifyUserSession(sessionData).then(function(response) {
             $log.info("Response is: " + JSON.stringify(response));
