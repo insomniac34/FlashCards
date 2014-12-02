@@ -68,14 +68,15 @@ FlashCards, the comically unoriginal and generic name with which I have coined t
 
 **WHERE CODE IS LOCATED**
 FLASHCARDS -> main directory (for simplicity, both front and back-end code have been included in this directory)
-	verification-sql/ -> DIRECTORY containing all database test components
-	spec/ -> DIRECTORY containing the backend Jasmine unit tests
-	src/ -> contains front-end JavaScript, HTML and CSS code
-	resources/ -> contains JS and CSS libraries necessary for the front-end codebase
+	
+	- verification-sql/ -> DIRECTORY containing all database test components
+	- spec/ -> DIRECTORY containing the backend Jasmine unit tests
+	- src/ -> contains front-end JavaScript, HTML and CSS code
+	- resources/ -> contains JS and CSS libraries necessary for the front-end codebase
 
-	server.js -> main server application
-	orm.js -> object-relational mapping interface; contains majority of logic for database interactions/user authentication/flashcards handling
-	init.sql -> SQL script containing the create table statements for the database
+	- server.js -> main server application
+	- orm.js -> object-relational mapping interface; contains majority of logic for database interactions/user authentication/flashcards handling
+	- init.sql -> SQL script containing the create table statements for the database
 		
 
 	
