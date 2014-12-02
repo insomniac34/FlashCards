@@ -32,6 +32,16 @@ SESSIONS TABLE
 | session_start   | datetime     | YES  |     | NULL    |                |
 | token           | varchar(512) | YES  |     | NULL    |                |
 +-----------------+--------------+------+-----+---------+----------------+
+
+FLASHCARDS TABLE
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| id        | int(11)      | NO   | PRI | NULL    | auto_increment |
+| user      | varchar(100) | YES  |     | NULL    |                |
+| questions | varchar(200) | YES  |     | NULL    |                |
+| answers   | varchar(200) | YES  |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
 '''
 
 def main():    
@@ -42,11 +52,11 @@ def main():
     getSessionsQuery = ("SELECT * FROM `flashcards`")
     cursor.execute(getSessionsQuery)
 
-    for row in cursor.fetchall():
-        print(row)
+    #for row in cursor.fetchall():
+    #    print(row)
 
-    #for (session_id, user, expiration_date, session_start, token) in cursor:
-        #print("{}, {} was hired on {:%d %b %Y}".format(session_id, user, expiration_date, session_start, token))
+    for (id, user, questions, answers) in cursor:
+      print(" " + str(id) + " " + user + " " + questions + " " + answers)
 
     con.commit();
 

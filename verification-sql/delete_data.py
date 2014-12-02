@@ -8,7 +8,10 @@ def main():
     deleteTestUserQuery = ("DELETE FROM `users` WHERE users.user_name='test'")
     cursor.execute(deleteTestUserQuery)
 
-    deleteTestSessionQuery = "DELETE FROM `sessions` WHERE sessions.token='\"1234567890\"'"
+    deleteTestSessionQuery = ("DELETE FROM `sessions` WHERE sessions.token='\"1234567890\"'")
+    cursor.execute(deleteTestSessionQuery)
+
+    deleteTestSessionQuery = ("DELETE FROM `flashcards` WHERE flashcards.user='test'")
     cursor.execute(deleteTestSessionQuery)
 
     #commit!!!

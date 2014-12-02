@@ -19,7 +19,11 @@ exports.testFlashcardsUpdateQuery = function() {
     var mockHttpResponse = {
         writeHead: function() {return;},
         write: function() {return;},
-        end: function() {process.exit();}       
+        end: function() {    
+            setTimeout(function() {
+                process.exit();
+            }, 1000);         
+        }       
     };
 
     var newFlashcards = [{

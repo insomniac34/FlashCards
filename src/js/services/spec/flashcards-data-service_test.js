@@ -110,15 +110,6 @@ describe("FlashCardsDataService functionality", function() {
 
     it ('should use getFlashCardData() to fetch up-to-date flashcard data from the application backend', function(done) {
         
-        /* 
-            var mockFlashcardData = {
-                "id":14,
-                "user":"tyler",
-                "questions":"LOL",
-                "answers":"LOL?"
-            };
-        */
-
         var testResponse = function(response) {
             expect(JSON.parse(response[0]).id).toBe(14);
             expect(JSON.parse(response[0]).user).toBe('tyler');
