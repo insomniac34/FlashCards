@@ -1,4 +1,4 @@
-create database if not exists flashcards;
+create database if not exists test;
 
 use flashcards;
 
@@ -21,8 +21,9 @@ create table if not exists flashcards (
 create table if not exists sessions (
     session_id INT NOT NULL AUTO_INCREMENT,
     user VARCHAR(100),
-    expiration_date datetime NOT NULL,
-    session_start datetime NOT NULL,
+    expiration_date datetime,
+    session_start datetime,
+    token VARCHAR(512),
     PRIMARY KEY(session_id)
 );
 
