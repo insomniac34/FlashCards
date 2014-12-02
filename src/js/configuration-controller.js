@@ -31,37 +31,39 @@ angular.module('FlashCards')
             if (!angular.equals(JSON.parse(response[0]).status, "verified")) {
                 var result = localStorageService.remove('session');
                 $state.go('login');
+                return;
             }
+
+            // retrieve up-to-date data from server
+            $log.info("writing session data: " + JSON.stringify(sessionData)); 
+            FlashCardsDataService.getFlashCardData(sessionData).then(function(results) {
+                $log.info("result received: " + JSON.stringify(results[0]));
+                if (JSON.parse(results[0]).status !== undefined) {
+                    //this means a message is being transmitted from the server; the only possible message for this situation is an authentication failure.
+                    var result = localStorageService.remove('session');
+                    $state.go('login');
+                    return;                    
+                }
+                else {
+                    angular.forEach(results, function(result) {
+                        var resultObj = JSON.parse(result);
+                        $log.info("resultObj is: " + JSON.stringify(resultObj));     
+                
+                        $scope.newFlashCards.push(createNewFlashCard([{
+                            question: resultObj.questions,
+                            answer: resultObj.answers
+                        }]));
+
+                        /* since these come from the server, they are, by definition, saved */
+                        $scope.newFlashCards[$scope.newFlashCards.length-1].saved = true;
+                    });
+                }
+            });
         });        
     }    
     else {
         $state.go('login');
     }   
-    
-    // retrieve up-to-date data from server 
-    FlashCardsDataService.getFlashCardData().then(function(results) {
-        $log.info("data received: " + JSON.stringify(results));
-        if (results === undefined || results === null) {
-            $scope.notifications.push({
-                msg: 'There was an error processing your request',
-                type: 'warning'
-            });   
-        }
-        else {
-            angular.forEach(results, function(result) {
-                var resultObj = JSON.parse(result);
-                $log.info("resultObj is: " + JSON.stringify(resultObj));     
-        
-                $scope.newFlashCards.push(createNewFlashCard([{
-                    question: resultObj.questions,
-                    answer: resultObj.answers
-                }]));
-
-                /* since these come from the server, they are, by definition, saved */
-                $scope.newFlashCards[$scope.newFlashCards.length-1].saved = true;
-            });
-        }
-    });
 
     $scope.$watch('radioModel', function(radioModel) {
         if (radioModel === null) {
@@ -193,10 +195,14 @@ angular.module('FlashCards')
     };
 
     $scope.save = function() {
+        var sessionData = localStorageService.get('session');
         var params = {
             flashcards: [],
             deletedFlashCards: angular.copy($scope.deletedFlashCards),
-            multiQuestionFlashCards: angular.copy($scope.newMultiQuestionFlashCards)
+            multiQuestionFlashCards: angular.copy($scope.newMultiQuestionFlashCards),
+            username: sessionData.username,
+            authenticationToken: sessionData.authenticationToken,
+            sessionId: sessionData.sessionId
         }; 
 
         angular.forEach($scope.newFlashCards, function(flashcard) {
@@ -205,17 +211,20 @@ angular.module('FlashCards')
             }
         }); 
 
-        if (params.flashcards.length === 0) {
+        if (params.flashcards.length === 0 && params.deletedFlashCards.length === 0) {
             $scope.notifications.push({msg: 'No new flashcards to save!', type: 'danger'});
             return;
         }
 
+        $log.info("about to submit flashcards...JSON payload is: " + JSON.stringify(params));
         FlashCardsDataService.submitFlashCardData(params).then(function(response) {
-            if (response) {
+            $log.info("RESPONSE IS: " + JSON.stringify(response));
+            if (angular.equals(JSON.parse(response[0]).status, 'success')) {
                 $scope.notifications.push({msg: 'Flashcard data has been saved!', type: 'success'});
             }
             else {
-                $scope.notifications.push({msg: 'There was an error processing your request!', type: 'warning'});
+                localStorageService.remove('session');
+                $state.go('login');
             }
         });
     };

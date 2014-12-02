@@ -44,18 +44,29 @@ require('http').createServer(function (request, response) {
                                 console.log('flashcard data submitted!');
                                 console.log('Value of data to be synced with backend: ' + JSON.stringify(jsonPayload));
 
-                                orm.createFlashcards(jsonPayload.data.flashcards);
-                                orm.deleteFlashcards(jsonPayload.data.deletedFlashCards);
+                                orm.createFlashcards(
+                                    response,
+                                    jsonPayload.data.flashcards,
+                                    jsonPayload.data.username,
+                                    jsonPayload.data.authenticationToken
+                                );
 
-                                response.writeHead(200, "OK", {'Content-Type': 'application/json'});
-                                response.write(JSON.stringify({results: true}));      
-                                response.end(); 
+                                orm.deleteFlashcards(
+                                    response,
+                                    jsonPayload.data.deletedFlashCards,
+                                    jsonPayload.data.username,
+                                    jsonPayload.data.authenticationToken
+                                );
 
                                 break;
 
                             case 'getFlashCards':
                                 console.log("action: GETFLASHCARDS!");
-                                orm.retrieveAndTransmitFlashcards(response);
+                                orm.retrieveAndTransmitFlashcards(
+                                    response,
+                                    jsonPayload.data.username,
+                                    jsonPayload.data.authenticationToken
+                                );
                                 
                                 break;
 

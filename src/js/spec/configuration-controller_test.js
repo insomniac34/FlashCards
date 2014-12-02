@@ -138,7 +138,13 @@ describe("flashcards configuration tool", function() {
         scope.deleteFlashCard(0);           
         expect(scope.newFlashCards).toEqual([]);     
     });   
-
+    
+    /*
+        AngularJS (and other modern JS frameworks) utilize the concept of Promises when handling asynchronous operations such as 
+        AJAX requests. Traditionally it has always been difficult to perform unit tests on asynchronous operations due to the variable
+        length of time they can take to complete. Jasmine 2.0 has added the Done() function, which tells the unit test to suspend execution 
+        UNTIL the promise is complete, allowing for easier testing of this common language feature.
+    */
     it ("should verify that an authorized session is currently active before fetching serverside data", function testSessionAuthenticationLogic() {
         scope.username = "johndoe123";
         var sessionId = 10;
@@ -148,13 +154,6 @@ describe("flashcards configuration tool", function() {
             authenticationToken: '1234567890'
         };
         localStorageService.set('session', JSON.stringify(sessionData));
-        
-        /*
-            AngularJS (and other modern JS frameworks) utilize the concept of Promises when handling asynchronous operations such as 
-            AJAX requests. Traditionally it has always been difficult to perform unit tests on asynchronous operations due to the variable
-            length of time they can take to complete. Jasmine 2.0 has added the Done() function, which tells the unit test to suspend execution 
-            UNTIL the promise is complete, allowing for easier testing of this common language feature.
-        */
 
         // tests to be evaluated on the promise's response
         var testResponse = function(response) {
@@ -176,6 +175,10 @@ describe("flashcards configuration tool", function() {
         $httpBackend.expectGET('templates/login-tpl.html').respond(401, '');
         FlashCardsUserService.verifyUserSession(sessionData).then(testResponse).catch(failureTest).finally(done);
         $httpBackend.flush();
+
+        //verify no other outgoing server requests have been issued
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();        
     });
     
    it ("should show only saved flashcards when the radio button is set to 'Middle' ", function() {

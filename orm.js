@@ -85,8 +85,9 @@ SESSIONS TABLE
 +-----------------+--------------+------+-----+---------+----------------+
 | session_id      | int(11)      | NO   | PRI | NULL    | auto_increment |
 | user            | varchar(100) | YES  |     | NULL    |                |
-| expiration_date | date         | NO   |     | NULL    |                |
-| session_start   | date         | NO   |     | NULL    |                |
+| expiration_date | datetime     | YES  |     | NULL    |                |
+| session_start   | datetime     | YES  |     | NULL    |                |
+| token           | varchar(512) | YES  |     | NULL    |                |
 +-----------------+--------------+------+-----+---------+----------------+
 */
 exports.verifySession = function(serverResponse, username, sessionId, authenticationToken) {
@@ -94,13 +95,13 @@ exports.verifySession = function(serverResponse, username, sessionId, authentica
 
     var con = getConnection();
     var verifyUserSessionQuery = "SELECT * FROM `sessions` WHERE sessions.session_id=\'"+sessionId+"\' AND sessions.user=\'"+username+"\' AND sessions.token=\'" + JSON.stringify(authenticationToken) + "\'";
-    con.query(verifyUserSessionQuery, function(err, rows, fields) {
-
-        console.log("VERIFYSESSION(): Comparing passed-in auth token " + JSON.stringify(authenticationToken) + " to " + rows[0].token);
-
-        if (rows !== undefined) {
+    con.query(verifyUserSessionQuery, function(err, rows, fields) {        
+        if (rows.length !== 0) {
+            console.log("rows is " + JSON.stringify(rows));
+            console.log("VERIFYSESSION(): Comparing passed-in auth token " + JSON.stringify(authenticationToken) + " to " + rows[0].token);
             dbResults.push(JSON.stringify({
-                status: 'verified'
+                status: 'verified',
+                sessionId: sessionId
             }));
         }
         else {
@@ -292,80 +293,153 @@ FLASHCARDS TABLE
 | answers   | varchar(200) | YES  |     | NULL    |                |
 +-----------+--------------+------+-----+---------+----------------+
 */
-exports.createFlashcards = function(newFlashcards, userId) {
+exports.createFlashcards = function(serverResponse, newFlashcards, username, authenticationToken) {
     if (newFlashcards === null || newFlashcards === undefined || newFlashcards.length === 0) {
         console.log("no new flashcards to add to database: " + JSON.stringify(newFlashcards));
         return;
     }
-
-    // insert new flashcards into database
+    var dbResults = [];
     var con = getConnection();
-    newFlashcards.forEach(function(flashcard) {
-        var questions = "";
-        var answers = "";
-        flashcard.questionAnswerPairings.forEach(function(questionAnswerPairing) {
-            questions+=questionAnswerPairing.question+"\n";
-            answers+=questionAnswerPairing.answer+"\n";
+    var sessionAuthenticationQuery = "SELECT * FROM `sessions` WHERE sessions.token=\'" + JSON.stringify(authenticationToken) + "\' AND sessions.user=\'" + username + "\'";
+    con.query(sessionAuthenticationQuery, function(err, rows, fields) {
+        if (err) {
+            throw err;
+        }
+
+        // authenticate user session
+        if (rows.length === 0) {
+            dbResults.push(JSON.stringify({
+                status: 'authentication-failure'
+            }));            
+            serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
+            console.log("WRITING: " + dbResults.toString());
+            serverResponse.write(JSON.stringify({results: dbResults}));      
+            serverResponse.end();               
+            return;
+        }
+
+        // insert new flashcards into database
+        newFlashcards.forEach(function(flashcard) {
+            var questions = "";
+            var answers = "";
+            flashcard.questionAnswerPairings.forEach(function(questionAnswerPairing) {
+                questions+=questionAnswerPairing.question+"\n";
+                answers+=questionAnswerPairing.answer+"\n";
+            });
+
+            var insertionQuery = "INSERT INTO `flashcards` VALUES (NULL, 'ty', \'" + questions + "\', \'" + answers + "\')";
+            console.log("INSERTION QUERY IS: " + insertionQuery);
+            con.query(insertionQuery, function(_err, _rows, _fields) {
+                if (_err) {
+                    throw _err;
+                }
+            });
         });
 
-        var insertionQuery = "INSERT INTO `flashcards` VALUES (NULL, 'ty', \'" + questions + "\', \'" + answers + "\')";
-        console.log("INSERTION QUERY IS: " + insertionQuery);
-        con.query(insertionQuery, function(err, rows, fields) {
-            if (err) {
-                throw err;
-            }
-        });
+        dbResults.push(JSON.stringify({
+            status: 'success'
+        }));          
+        serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
+        console.log("WRITING: " + dbResults.toString());
+        serverResponse.write(JSON.stringify({results: dbResults}));      
+        serverResponse.end();               
     });
 
     releaseConnection(con);
 };
 
-exports.deleteFlashcards = function(targetFlashcards, userId) {
+exports.deleteFlashcards = function(serverResponse, targetFlashcards, username, authenticationToken) {
     if (targetFlashcards === null || targetFlashcards === undefined || targetFlashcards.length === 0) {
         console.log("no flashcards to delete from database: " + JSON.stringify(targetFlashcards));
         return;
     }    
 
-    // remove deleted flashcards from database
+    var dbResults = [];
     var con = getConnection();
-    targetFlashcards.forEach(function(flashCard) {
-        var questions = "";
-        var answers = "";
-        flashcard.questionAnswerPairings.forEach(function(questionAnswerPairing) {
-            questions+=questionAnswerPairing.question+"\n";
-            answers+=questionAnswerPairing.answer+"\n";
-        });
+    var sessionAuthenticationQuery = "SELECT * FROM `sessions` WHERE sessions.token=\'" + JSON.stringify(authenticationToken) + "\' AND sessions.user=\'" + username + "\'";
+    con.query(sessionAuthenticationQuery, function(err, rows, fields) {
+        if (err) {
+            throw err;
+        }
 
-        var removalQuery = "DELETE FROM `flashcards` WHERE `questions`=\'"+questions+"\' AND `answers`=\'"+answers+"\'";
-        con.query(removalQuery, function(err, rows, fields) {
-            if (err) {
-                throw err;
-            }  
+        // authenticate user session
+        if (rows.length === 0) {
+            dbResults.push(JSON.stringify({
+                status: 'authentication-failure'
+            }));            
+            serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
+            console.log("WRITING: " + dbResults.toString());
+            serverResponse.write(JSON.stringify({results: dbResults}));      
+            serverResponse.end();               
+            return;
+        }
+
+        // remove deleted flashcards from database
+        targetFlashcards.forEach(function(flashCard) {
+            var questions = "";
+            var answers = "";
+            flashcard.questionAnswerPairings.forEach(function(questionAnswerPairing) {
+                questions+=questionAnswerPairing.question+"\n";
+                answers+=questionAnswerPairing.answer+"\n";
+            });
+
+            var removalQuery = "DELETE FROM `flashcards` WHERE `questions`=\'"+questions+"\' AND `answers`=\'"+answers+"\'";
+            con.query(removalQuery, function(_err, _rows, _fields) {
+                if (_err) {
+                    throw _err;
+                }  
+            });
         });
+        dbResults.push(JSON.stringify({
+            status: 'success'
+        }));        
+        serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
+        console.log("WRITING: " + dbResults.toString());
+        serverResponse.write(JSON.stringify({results: dbResults}));      
+        serverResponse.end();             
     });
     
     releaseConnection(con);
 };
 
-exports.retrieveAndTransmitFlashcards = function(serverResponse) {
+exports.retrieveAndTransmitFlashcards = function(serverResponse, username, authenticationToken) {
     var con = getConnection();  
-
     var dbResults = [];
-    var getFlashCardsQuery = "SELECT * FROM `flashcards` ORDER BY flashcards.id DESC";
-    con.query(getFlashCardsQuery, function(err, rows, fields) {
+    var sessionAuthenticationQuery = "SELECT * FROM `sessions` WHERE sessions.token=\'" + JSON.stringify(authenticationToken) + "\' AND sessions.user=\'" + username + "\'";    
+    console.log("retrieveAndTransmitFlashcards(): verification query is: " + sessionAuthenticationQuery);
+    con.query(sessionAuthenticationQuery, function(err, rows, fields) {
         if (err) {
             throw err;
         }
+        console.log("retrieveAndTransmitFlashcards(): result of verification query has length: " + rows.length.toString());
+        // authenticate user session
+        if (rows.length === 0) {
+            dbResults.push(JSON.stringify({
+                status: 'authentication-failure'
+            }));            
+            serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
+            console.log("WRITING: " + dbResults.toString());
+            serverResponse.write(JSON.stringify({results: dbResults}));      
+            serverResponse.end();               
+            return;
+        }
 
-        rows.forEach(function(row) {
-            //console.log("pushing : " + JSON.stringify(row));
-            dbResults.push(JSON.stringify(row));
+        var getFlashCardsQuery = "SELECT * FROM `flashcards` ORDER BY flashcards.id DESC";
+        console.log("retrieveAndTransmitFlashcards(): getFlashCardsQuery is: " + getFlashCardsQuery);
+        con.query(getFlashCardsQuery, function(_err, _rows, _fields) {
+            if (_err) {
+                throw _err;
+            }
+
+            _rows.forEach(function(row) {
+                //console.log("pushing : " + JSON.stringify(row));
+                dbResults.push(JSON.stringify(row));
+            });
+            serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
+            console.log("WRITING: " + dbResults.toString());
+            serverResponse.write(JSON.stringify({results: dbResults}));      
+            serverResponse.end();                              
         });
-
-        serverResponse.writeHead(200, "OK", {'Content-Type': 'application/json'});
-        console.log("WRITING: " + dbResults.toString());
-        serverResponse.write(JSON.stringify({results: dbResults}));      
-        serverResponse.end();                              
     });
 
     releaseConnection(con);
