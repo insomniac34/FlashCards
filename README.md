@@ -25,14 +25,14 @@ FlashCards, the comically unoriginal and generic name with which I have coined t
 **THE TESTS:**
 
 	**Front-End:**
-		On the front-end, the test suite features several areas of high coverage. At the moment, the API for communication with the server consists of a collection of AngularJS Services, which are compact and reusable collections of functions which are available to all components of the frontend. These encompass 100% of AJAX requests made between the application front and back-end. All Services feature 100% test coverage. AngularJS utilizes JavaScript Promises behind the scenes in its $http service, the exclusive mechanism utilized for sending XHR requests to the server. Like the NodeJS i/o operations on the backend, Angular's implementation of the Promise is an asynchronous method of performing external data requests. As such, Jasmine unit tests which treat promise-based functions as regular functions DO NOT WORK. This was a source of extreme difficulty in this project, however I have learned a massive amount about how Promises and async operations work. The unit tests for the Angular Services feature the usage of several advanced Jasmine features, primarily the $httpBackend mock backend service object and Jasmine 2.0's Promise testing features, such as the done() method for forcing a Controller to recompile and resolve all promises in order to update the model within the scope of the unit tests. Tests on the user verification aspect of the FlashCardsUserService is critical in verifying the security of the application.
+	On the front-end, the test suite features several areas of high coverage. At the moment, the API for communication with the server consists of a collection of AngularJS Services, which are compact and reusable collections of functions which are available to all components of the frontend. These encompass 100% of AJAX requests made between the application front and back-end. All Services feature 100% test coverage. AngularJS utilizes JavaScript Promises behind the scenes in its $http service, the exclusive mechanism utilized for sending XHR requests to the server. Like the NodeJS i/o operations on the backend, Angular's implementation of the Promise is an asynchronous method of performing external data requests. As such, Jasmine unit tests which treat promise-based functions as regular functions DO NOT WORK. This was a source of extreme difficulty in this project, however I have learned a massive amount about how Promises and async operations work. The unit tests for the Angular Services feature the usage of several advanced Jasmine features, primarily the $httpBackend mock backend service object and Jasmine 2.0's Promise testing features, such as the done() method for forcing a Controller to recompile and resolve all promises in order to update the model within the scope of the unit tests. Tests on the user verification aspect of the FlashCardsUserService is critical in verifying the security of the application.
 		In addition to the Angular service tests, unit tests for the functionality of the FlashCards Configuration Tool, Login page, and the early version of the FlashCards page provide coverage for the majority of user functionalities on these pages. 
 	
 	**Back-End:** 
-		The back-end's unit tests utilize the jasmine-node NodeJS module (https://github.com/mhevery/jasmine-node), which uses vanilla Jasmine syntax for its unit tests. These tests are executed from, and output their results to, the command line. The only backend component which features code coverage is ORM.js, however this is actually the majority of the backend's code - Server.js is the only other signficant script, and unfortunately testing it with vanilla Jasmine provided all but impossible, however this will be an excellent future opportunity to learn about the functionality of addons to jasmine-node.
+	The back-end's unit tests utilize the jasmine-node NodeJS module (https://github.com/mhevery/jasmine-node), which uses vanilla Jasmine syntax for its unit tests. These tests are executed from, and output their results to, the command line. The only backend component which features code coverage is ORM.js, however this is actually the majority of the backend's code - Server.js is the only other signficant script, and unfortunately testing it with vanilla Jasmine provided all but impossible, however this will be an excellent future opportunity to learn about the functionality of addons to jasmine-node.
 	
 	**Database:**
-		The database unit tests revolve primarily around the calling of ORM.js functions after Python scripts have loaded dummy data into the database. Another Python script then samples the values in the database, compares them to the hardcoded expected values, and prints the results of these comparisons to the command line. At the moment, only one database test has been written due to last-minute time restraints.
+	The database unit tests revolve primarily around the calling of ORM.js functions after Python scripts have loaded dummy data into the database. Another Python script then samples the values in the database, compares them to the hardcoded expected values, and prints the results of these comparisons to the command line. At the moment, only one database test has been written due to last-minute time restraints.
 
 
 
@@ -53,13 +53,13 @@ FlashCards, the comically unoriginal and generic name with which I have coined t
 
 **A red/yellow/green-template of the different areas of the system (e.g., Database - Red, Front End - Green, etc.) with justifications**
 	
-	**Front-End: RED**
+**Front-End: RED**
 	The functionality of the front-end application, as a flashcards webapp, is simply not ready for release; the primary page responsible for the application's main functionality is simply not complete, as the more advanced configuration tool took up a lot of the front-end GUI development time.
 	
-	**Back-End: YELLOW**
+**Back-End: YELLOW**
 	While more testing, especially for security holes, needs to be performed, the pure functionality of the backend is such that a functioning product demo could easily be produced without applying any changes to the backend code base. Assuming a completed front-end from a design and basic usability perspective, the backend in its current state is capable of supporting a functioning demo FlashCards application.
 	
-	**Database: YELLOW**
+**Database: YELLOW**
 	This could be considered GREEN if for a school project, however from a professional standpoint there are numerous optimizations which could be performed on the schema of the database. As with the main back-end codebase, the database could benefit from more tests (Verification SQL), however in its current state the database is such that a functioning demo application could be produced without altering the schema/test code.
 
 
