@@ -1,4 +1,4 @@
-create database if not exists test;
+create database if not exists flashcards;
 
 use flashcards;
 
